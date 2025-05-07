@@ -1,5 +1,8 @@
 ## Kwa Notifications System
+UE4SS Oblivion notification mod
+Compilation of this project does not require engine source
 
+---
 
 ### Notification Component and WBP\_KwaNotifs
 
@@ -10,7 +13,10 @@ The core of the system is comprised of the `NotificationComponent` and the `WBP_
 * **PrintNotificiationDebug**: Prints a notification message only when debug messages are explicitly enabled.
 * **SetDebugMessagesEnabled**: Configures whether debug messages are enabled. This function should ideally be used in conjunction with the `OnReady` event to ensure the component is properly initialized.
 
+---
+
 ### Events
+
 
 Both `NotificationComponent` and `WBP_ModEntryPoint` expose several bindable delegates to react to notification events:
 
@@ -22,8 +28,19 @@ Both `NotificationComponent` and `WBP_ModEntryPoint` expose several bindable del
 
 * **OnReady**: This event is unique to the `NotificationComponent` and is called when a valid reference to the `WBP_KwaNotifs` widget is successfully located.
 
+---
+
 ### BPFL\_KwaNotifications
 
 The `BPFL_KwaNotifications` Global blueprint function for triggering notifications:
 
 * **PrintNotificationSlow**: This function finds all available references to the `WBP_KwaNotifs` widget and invokes its print message function on each, broadcasting the notification, should be used sparingly due to global widget search.
+
+---
+
+**Credits**  
+∙ **Altar UHT SDK Dump**  
+↳ [github.com/Kein/Altar](https://github.com/Kein/Altar)  
+∙ **UE4SS**  
+↳ [github.com/UE4SS-RE/RE-UE4SS](https://github.com/UE4SS-RE/RE-UE4SS)  
+
