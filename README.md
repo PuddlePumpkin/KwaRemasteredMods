@@ -11,20 +11,19 @@ Compilation of this project does not require engine source
 
 * Install the mod
 * Download a API release from the releases tab
-* Add the .uassets to your project's content folder
+* Add the .uassets to your project's content folder **DO NOT ADD THESE FILES TO YOUR PAK CHUNK, USE THEM AS DUMMY'S**
 
-**Do not add these files to your pak chunk**
 #### Via Component:
-* Add a BP_NotificationComponent to your actor (remember that ModActor is sometimes destructed so make sure you put the component on a living actor)
+* Add a `BP_NotificationComponent` to your actor (remember that `ModActor` is sometimes destructed so make sure you put the component on a living actor)
 * Call functions on the component
 * To turn on debug messages, click the component on the list, scroll down, and click the OnReady event, when the component is ready, you can call `SetDebugMessagesEnabled`
 
 #### Via Reference to widget:
-* Get all widgets of class WBP_KwaNotifs on a loop until the reference is valid and store it.
+* Get all widgets of class `WBP_KwaNotifs` on a loop until the reference is valid and store it.
 * Call functions on the reference
 
 #### Via Global Notification
-* Just call PrintNotificationSlow
+* Just call `PrintNotificationSlow`
 
 ---
 
