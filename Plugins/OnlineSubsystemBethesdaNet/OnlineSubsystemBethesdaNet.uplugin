@@ -1,0 +1,54 @@
+{
+	"FileVersion": 3,
+	"Version": 0,
+	"VersionName": "0.1.5 Beta",
+	"FriendlyName": "Bethesda.net Plugin",
+	"Description": "Bethesda.net integration for Unreal Engine 5",
+	"Category": "Online Platform",
+	"CreatedBy": "Bethesda.net",
+	"CreatedByURL": "http://www.bethesda.net",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"EngineVersion": "5.2",
+	"EnabledByDefault": false,
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"SupportedTargetPlatforms": [ "Win64" ],
+	"Modules": [
+		{
+			"Name": "OnlineSubsystemBethesdaNet",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"PlatformAllowList": [ "Win64" ],
+			"TargetDenyList": [
+				"Server"
+			]
+		}
+	],
+	"LocalizationTargets": [
+		{
+			"Name": "OnlineSubsystemBethesdaNet",
+			"LoadingPolicy": "Always"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "OnlineSubsystem",
+			"Enabled": true
+		},
+		{
+			"Name": "OnlineSubsystemUtils",
+			"Enabled": true
+		},
+		{
+			"Name": "OnlineSubsystemEOS",
+			"Enabled": true,
+			"SupportedTargetPlatforms": [
+				"Win64"
+			]
+		}
+	]
+}

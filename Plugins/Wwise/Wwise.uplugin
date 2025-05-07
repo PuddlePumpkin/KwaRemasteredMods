@@ -1,0 +1,61 @@
+{
+	"FileVersion": 3,
+	"Version": 202313199,
+	"VersionName": "2023.1.7.8574.3199",
+	"FriendlyName": "Wwise Unreal Engine Integration",
+	"Description": "Wwise integration for Unreal Engine",
+	"Category": "Audio",
+	"CreatedBy": "Audiokinetic, Inc.",
+	"CreatedByURL": "http://audiokinetic.com",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"EnabledByDefault": true,
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "Wwise",
+			"Type": "Runtime",
+			"LoadingPhase": "PreLoadingScreen"
+		},
+		{
+			"Name": "AkAudio",
+			"Type": "Runtime",
+			"LoadingPhase": "None"
+		},
+		{
+			"Name": "WwiseFileHandler",
+			"Type": "Runtime",
+			"LoadingPhase": "None"
+		},
+		{
+			"Name": "WwiseObjectUtils",
+			"Type": "Runtime",
+			"LoadingPhase": "None"
+		},
+		{
+			"Name": "WwiseObstructionOcclusion",
+			"Type": "Runtime",
+			"LoadingPhase": "None"
+		},
+		{
+			"Name": "WwiseResourceLoader",
+			"Type": "Runtime",
+			"LoadingPhase": "None"
+		},
+		{
+			"Name": "WwiseSimpleExternalSource",
+			"Type": "Runtime",
+			"LoadingPhase": "None"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "GeometryMode",
+			"Enabled": true
+		}
+	]
+}

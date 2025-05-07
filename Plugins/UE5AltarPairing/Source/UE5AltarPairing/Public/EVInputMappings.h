@@ -1,0 +1,48 @@
+#pragma once
+#include "CoreMinimal.h"
+#include "EVInputMappings.generated.h"
+
+UENUM()
+enum class EVInputMappings : int32 {
+    MOVE_FORWARD,
+    MOVE_BACKWARD,
+    MOVE_LEFT,
+    MOVE_RIGHT,
+    USE,
+    ACTIVATE,
+    BLOCK,
+    CAST,
+    RDYITEM,
+    CROUCH,
+    RUN,
+    TOGGLERUN,
+    AUTOMOVE,
+    JUMP,
+    TOGGLEPOV,
+    MENUMODE,
+    RESTMENU,
+    QUICKMENU,
+    QUICK1,
+    QUICK2,
+    QUICK3,
+    QUICK4,
+    QUICK5,
+    QUICK6,
+    QUICK7,
+    QUICK8,
+    QUICKSAVE,
+    QUICKLOAD,
+    GRAB,
+    OPTIONSMENU,
+    SHIFTKEY = 31,
+    STATSMENU,
+    INVENTORYMENU,
+    MAGICMENU,
+    MAPMENU,
+    QUESTMENU,
+    HELPMENU,
+    MOUSEAXIS,
+    MOUSEWHEEL,
+    NONE,
+};
+

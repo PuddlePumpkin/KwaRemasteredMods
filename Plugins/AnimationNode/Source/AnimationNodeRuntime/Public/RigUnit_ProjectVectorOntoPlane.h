@@ -1,0 +1,22 @@
+#pragma once
+#include "CoreMinimal.h"
+#include "UObject/NoExportTypes.h"
+#include "RigUnit_MathLibraryBase.h"
+#include "RigUnit_ProjectVectorOntoPlane.generated.h"
+
+USTRUCT(BlueprintType)
+struct ANIMATIONNODERUNTIME_API FRigUnit_ProjectVectorOntoPlane : public FRigUnit_MathLibraryBase {
+    GENERATED_BODY()
+public:
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(AllowPrivateAccess=true))
+    FVector InVector;
+    
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(AllowPrivateAccess=true))
+    FVector PlaneNormal;
+    
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(AllowPrivateAccess=true))
+    FVector OutVector;
+    
+    FRigUnit_ProjectVectorOntoPlane();
+};
+

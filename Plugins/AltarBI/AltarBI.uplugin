@@ -1,0 +1,35 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "AltarBI plugin",
+	"Description": "BPS BI integration for Altar",
+	"Category": "Other",
+	"CreatedBy": "Bethesda",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"SupportedTargetPlatforms": [ "Win64" ],
+	"Modules": [
+		{
+			"Name": "AltarBI",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"TargetDenyList": [
+				"Editor"
+			]
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "OnlineSubsystemBethesdaNet",
+			"Enabled": true,
+			"SupportedTargetPlatforms": [ "Win64" ]
+		}
+	]
+}

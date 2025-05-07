@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "Steering Behaviors",
+	"Description": "Navigation system for AI agents that combines multiple behaviors in a single consistent navigation direction. ",
+	"Category": "AI",
+	"CreatedBy": "Black Shamrock",
+	"CreatedByURL": "https://globalgitlab.virtuosgames.com/black-shamrock",
+	"DocsURL": "https://globalgitlab.virtuosgames.com/black-shamrock/unrealengine/SteeringBehaviors",
+	"MarketplaceURL": "https://globalgitlab.virtuosgames.com/black-shamrock/unrealengine/SteeringBehaviors",
+	"SupportURL": "https://globalgitlab.virtuosgames.com/black-shamrock/unrealengine/SteeringBehaviors/-/issues",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": true,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "SteeringBehaviors",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}

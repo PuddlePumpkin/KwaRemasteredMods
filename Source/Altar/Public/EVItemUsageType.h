@@ -1,0 +1,45 @@
+#pragma once
+#include "CoreMinimal.h"
+#include "EVItemUsageType.generated.h"
+
+UENUM(BlueprintType)
+enum class EVItemUsageType : uint8 {
+    NONE,
+    ACTI,
+    APPA,
+    ARMO,
+    BOOK,
+    CLOT,
+    CONT,
+    DOOR,
+    INGR,
+    LIGH,
+    MISC,
+    FLOR,
+    FURN,
+    WEAP,
+    AMMO,
+    NPC,
+    CREA,
+    SLGM,
+    KEYM,
+    ALCH,
+    FOOD,
+    COMBATWEAR,
+    WEAR,
+    WEAP_NONE,
+    WEAP_MELEE,
+    WEAP_RANGED,
+    SPELL,
+    SPELL_RANGED,
+    SPELL_TOUCH,
+    SPELL_SELF,
+    SPELL_ALTERATION,
+    SPELL_CONJURATION,
+    SPELL_DESTRUCTION,
+    SPELL_ILLUSION,
+    SPELL_MYSTICISM,
+    SPELL_RESTORATION,
+    COUNT,
+};
+
