@@ -25,13 +25,13 @@ No development download required
 * Add a `BP_NotificationComponent` to your actor (remember that `ModActor` is sometimes destructed so make sure you put the component on a living actor)
 * Call functions on the component
 * To turn on debug messages, click the component on the list, scroll down, and click the OnReady event, when the component is ready, you can call `SetDebugMessagesEnabled`
-![Notification Dummy Screenshot](Docs/AddNotificationWidget.png)
+![Notification Dummy Screenshot](Docs/AddNotificationsComponent.png)
 
 
 #### Via Reference to widget:
 * Get all widgets of class `WBP_KwaNotifs` on a loop until the reference is valid and store it.
 * Call functions on the reference
-![Notification Widget Screenshot](Docs/AddNotificationWidget.png)
+![Notification Widget Screenshot](Docs/AddNotificationsWidgetReference.png)
 
 #### Via Global Notification
 * Just call `PrintNotificationSlow`
