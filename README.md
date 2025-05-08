@@ -39,8 +39,39 @@ No development download required
 ---
 
 ### Usage - Lua
+* Locate a reference to the WBP_KwaNotifs_C widget
+* Call `KwaRef:PrintNotification("Example Notification", 3)`
+(Message string, Duration)
 
-TODO
+#### Lua Example:
+``` Lua
+-- Find all KwaNotifs widgets
+    local KwaNotifsRefs = FindObjects(0, "WBP_KwaNotifs_C", nil, 0, 0, true)
+    if not KwaNotifsRefs or #KwaNotifsRefs == 0 then
+        print("ERROR: Widget not found")
+        return true
+    end
+
+    -- Select the instance with the transient path
+    local KwaRef = nil
+    for _, h in ipairs(KwaNotifsRefs) do
+        if h:GetFullName():find("/Engine/Transient") then
+            KwaRef = h
+            break
+        end
+    end
+
+    if not KwaRef or not KwaRef:IsValid() then
+        print("ERROR: No valid transient widget found")
+        return true
+    end
+
+    local success, err = pcall(function()
+        KwaRef:PrintNotification("Example Notification", 3)
+    end)
+    
+    print(success and "Success" or "ERROR: " .. tostring(err))
+```
 
 ---
 
