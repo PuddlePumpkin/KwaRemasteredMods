@@ -1,5 +1,7 @@
 ## Kwa Notifications System
-UE4SS Oblivion Remastered notification mod
+UE4SS Oblivion Remastered stacking notification mod
+
+Ctrl+N to enable / disable
 
 Compilation of this project does not require engine source
 
