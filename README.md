@@ -5,22 +5,33 @@ Compilation of this project does not require engine source
 
 ---
 
-### Usage - Blueprint
+### Usage - Blueprint Via Vanilla Notification
+
+No development download required
+* Add a vanilla notification, it will get processed alongside them.
+![Notification Vanilla Screenshot](Docs/AddNotificationVanilla.png)
+
+---
+
+### Usage - Blueprint Via Dummy Integration
 
 **YOU DO NOT NEED THE WHOLE PROJECT SOURCE TO ADD NOTIFICATIONS TO YOUR BLUEPRINT MOD, JUST IF YOU WANT TO MODIFY IT**
 
 * Install the mod
-* Download a API release from the releases tab
+* Download a development release from the releases tab
 * Add the .uassets to your project's content folder **DO NOT ADD THESE FILES TO YOUR PAK CHUNK, USE THEM AS DUMMY'S**
 
 #### Via Component:
 * Add a `BP_NotificationComponent` to your actor (remember that `ModActor` is sometimes destructed so make sure you put the component on a living actor)
 * Call functions on the component
 * To turn on debug messages, click the component on the list, scroll down, and click the OnReady event, when the component is ready, you can call `SetDebugMessagesEnabled`
+![Notification Dummy Screenshot](Docs/AddNotificationWidget.png)
+
 
 #### Via Reference to widget:
 * Get all widgets of class `WBP_KwaNotifs` on a loop until the reference is valid and store it.
 * Call functions on the reference
+![Notification Widget Screenshot](Docs/AddNotificationWidget.png)
 
 #### Via Global Notification
 * Just call `PrintNotificationSlow`
@@ -52,6 +63,7 @@ Both `BP_NotificationComponent` and `WBP_ModEntryPoint` expose several bindable 
 * **OnKwaNotification**: Called specifically when a custom notification originating from this system is posted.
 * **OnAnyNotification**: Called whenever any notification is posted, including both vanilla game notifications and custom notifications from this system.
 * **OnVanillaNotification**: Called specifically when a notification originating from the base game is posted.
+![Event Screenshot](Docs/Events.png)
 
 #### Component Only Event:
 
