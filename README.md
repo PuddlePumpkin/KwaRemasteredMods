@@ -11,6 +11,7 @@
 
 * Install the mod
 No development download required
+
 * Add a vanilla notification, it will get processed alongside them.
 ![Notification Vanilla Screenshot](Docs/AddNotificationVanilla.png)
 
@@ -18,11 +19,12 @@ No development download required
 
 ### Usage - Blueprint Via Dummy Integration
 
-**YOU DO NOT NEED THE WHOLE PROJECT SOURCE TO ADD NOTIFICATIONS TO YOUR BLUEPRINT MOD, JUST IF YOU WANT TO MODIFY IT**
+**YOU DO NOT NEED THE WHOLE PROJECT SOURCE TO ADD NOTIFICATIONS TO YOUR BLUEPRINT MOD, JUST IF YOU WANT TO MODIFY IT** ❌
 
-* Install the mod
-* Download a development release from the releases tab
-* Merge the content folder to your project's content folder, every directory must match to be valid dummy's
+* Install the mod to your game directory
+* Download a development blueprint release from the releases tab ✅
+* Merge the content folder to your project's content folder, every directory must match the tree to be valid dummy's
+
 ⚠️**DO NOT ADD THESE FILES TO YOUR PAK CHUNK, USE THEM AS DUMMY'S**⚠️
 
 #### Via Component:
@@ -43,6 +45,10 @@ No development download required
 ---
 
 ### Usage - Lua
+
+* Install the mod
+No development download required
+
 * Get a reference to the WBP_KwaNotifs_C widget
 * Call functions on reference
 
