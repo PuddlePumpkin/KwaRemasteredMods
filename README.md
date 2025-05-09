@@ -1,15 +1,15 @@
 ## Kwa Notifications System
-UE4SS Oblivion Remastered stacking notification mod
+[UE4SS](https://github.com/UE4SS-RE/RE-UE4SS) Oblivion Remastered stacking notification mod
 
-Ctrl+N to enable / disable
-Ctrl+Shift+D to enable / disabled debug messages
+`Ctrl+N` to enable / disable
+`Ctrl+Shift+D` to enable / disabled debug messages
 
-Compilation of this project does not require engine source
-
+![Preview Gif](Docs/KwaNotifs.gif)
 ---
 
 ### Usage - Blueprint Via Vanilla Notification
 
+* Install the mod
 No development download required
 * Add a vanilla notification, it will get processed alongside them.
 ![Notification Vanilla Screenshot](Docs/AddNotificationVanilla.png)
