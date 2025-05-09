@@ -1,7 +1,7 @@
 print("[KwaNotificationsLua] Initializing script...")
 
 -- Console command handler
-RegisterConsoleCommandHandler("PrintExampleNotification", function()
+RegisterConsoleCommandHandler("PrintExampleNotification", function(cmd, params, ar)
     -- Find reference
     local notif = FindFirstOf("WBP_KwaNotifs_C")
     if not notif or not notif:IsValid() then
