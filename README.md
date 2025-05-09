@@ -2,6 +2,7 @@
 UE4SS Oblivion Remastered stacking notification mod
 
 Ctrl+N to enable / disable
+Ctrl+Shift+D to enable / disabled debug messages
 
 Compilation of this project does not require engine source
 
@@ -41,38 +42,38 @@ No development download required
 ---
 
 ### Usage - Lua
-* Locate a reference to the WBP_KwaNotifs_C widget
-* Call `KwaRef:PrintNotification("Example Notification", 3)`
-(Message string, Duration)
+* Get a reference to the WBP_KwaNotifs_C widget
+* Call functions on reference
 
 #### Lua Example:
 ``` Lua
--- Find all KwaNotifs widgets
-    local KwaNotifsRefs = FindObjects(0, "WBP_KwaNotifs_C", nil, 0, 0, true)
-    if not KwaNotifsRefs or #KwaNotifsRefs == 0 then
-        print("ERROR: Widget not found")
+RegisterConsoleCommandHandler("PrintExampleNotification", function()
+    -- Find reference
+    local notif = FindFirstOf("WBP_KwaNotifs_C")
+    if not notif or not notif:IsValid() then
+        print("ERROR: KwaNotifs not found")
+        ar:Log("ERROR: KwaNotifs not found")
         return true
     end
 
-    -- Select the instance with the transient path
-    local KwaRef = nil
-    for _, h in ipairs(KwaNotifsRefs) do
-        if h:GetFullName():find("/Engine/Transient") then
-            KwaRef = h
-            break
-        end
-    end
+    -- Print Notifications
+    notif:Print("Example Notification")
+    notif:PrintDebug("This Won't show up without debug messages being enabled")
+    notif:SetDebugMessagesEnabled(true) -- This enables debug messages, or you can also press ctrl-shift-D
+    notif:PrintDebug("This debug message shows up!")
 
-    if not KwaRef or not KwaRef:IsValid() then
-        print("ERROR: No valid transient widget found")
-        return true
-    end
 
-    local success, err = pcall(function()
-        KwaRef:PrintNotification("Example Notification", 3)
-    end)
-    
-    print(success and "Success" or "ERROR: " .. tostring(err))
+    -- If you want to print notifications with a set length:
+    notif:PrintNotification("Long Notification", 10)
+    notif:PrintNotificationDebug("Long Debug Notification", 10)
+    --you can also print notifications with icons with an Texture2d object reference: 
+    --notif:PrintNotificationWithIcon(String, Duration, TextureObject)
+
+
+    print("Sent notifications...")
+    ar:Log("Sent notifications...")
+    return true
+end)
 ```
 
 ---
