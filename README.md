@@ -22,7 +22,8 @@ No development download required
 
 * Install the mod
 * Download a development release from the releases tab
-* Add the .uassets to your project's content folder **DO NOT ADD THESE FILES TO YOUR PAK CHUNK, USE THEM AS DUMMY'S**
+* Merge the content folder to your project's content folder, every directory must match to be valid dummy's
+⚠️**DO NOT ADD THESE FILES TO YOUR PAK CHUNK, USE THEM AS DUMMY'S**⚠️
 
 #### Via Component:
 * Add a `BP_NotificationComponent` to your actor (remember that `ModActor` is sometimes destructed so make sure you put the component on a living actor)

@@ -8,11 +8,11 @@ setlocal enabledelayedexpansion
 :: Your built blueprint mod pak folder
 set "SOURCE_DIR=%~dp0\Windows\OblivionRemastered\Content\Paks".
 :: Your Oblivion Mod Directory
-set "DEST_DIR=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\Content\Paks\LogicMods\KwaNotificationsBP"
+set "DEST_DIR=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\Content\Paks\LogicMods\KwaNotificationsBP_P"
 ::Your chunk labelled pak name (without the .pak / ucas file extension)
 set "PAKNAME=pakchunk248-Windows"
 ::Your renamed pak name (the name you want it to be changed to in logicmods folder)
-set "RENAME=KwaNotificationsBP"
+set "RENAME=KwaNotificationsBP_P"
 
 :: Your lua mod directory
 set "SOURCE_DIR_LUA=%~dp0"
