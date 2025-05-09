@@ -2,7 +2,7 @@
 [UE4SS](https://github.com/UE4SS-RE/RE-UE4SS) Oblivion Remastered stacking notification mod
 
 `Ctrl+N` to enable / disable
-`Ctrl+Shift+D` to enable / disabled debug messages
+`Ctrl+Shift+D` to enable / disable debug messages
 
 ![Preview Gif](Docs/KwaNotifs.gif)
 ---
@@ -59,14 +59,14 @@ RegisterConsoleCommandHandler("PrintExampleNotification", function(cmd, params, 
     -- Print Notifications
     notif:Print("Example Notification")
     notif:PrintDebug("This Won't show up without debug messages being enabled")
-    notif:SetDebugMessagesEnabled(true) -- This enables debug messages, or you can also press ctrl-shift-D
+    notif:SetDebugMessagesEnabled(true) -- This enables debug messages, or press ctrl-shift-D
     notif:PrintDebug("This debug message shows up!")
 
 
     -- If you want to print notifications with a set length:
     notif:PrintNotification("Long Notification", 10)
     notif:PrintNotificationDebug("Long Debug Notification", 10)
-    --you can also print notifications with icons with an Texture2d object reference: 
+    --you can also print notifications with icons with a Texture2d object reference: 
     --notif:PrintNotificationWithIcon(String, Duration, TextureObject)
 
 
@@ -84,7 +84,7 @@ The core of the system is comprised of the `BP_NotificationComponent` and the `W
 
 * **PrintNotification**: Prints a standard notification message to the notification list.
 * **PrintNotificationWithIcon**: Prints a notification message that can optionally include an icon. This function is safe to use even without providing an icon.
-* **PrintNotificiationDebug**: Prints a notification message only when debug messages are explicitly enabled.
+* **PrintNotificationDebug**: Prints a notification message only when debug messages are explicitly enabled.
 * **SetDebugMessagesEnabled**: Configures whether debug messages are enabled. This function should ideally be used in conjunction with the `OnReady` event to ensure the component is properly initialized.
 
 ---
