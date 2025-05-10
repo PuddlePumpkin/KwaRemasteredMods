@@ -1,23 +1,30 @@
 @echo off
 setlocal enabledelayedexpansion
 
-
+echo Attempting to end process: OblivionRemastered-Win64-Shipping.exe
+taskkill /f /im OblivionRemastered-Win64-Shipping.exe
+if %errorlevel% equ 0 (
+    echo Process ended successfully.
+    timeout /t 1
+) else (
+    echo Failed to end process. It may not have been running.
+)
 
 
 :: DEFINE THESE 
 :: Your built blueprint mod pak folder
-set "SOURCE_DIR=%~dp0\Windows\OblivionRemastered\Content\Paks".
+set "SOURCE_DIR=%~dp0..\Windows\OblivionRemastered\Content\Paks".
 :: Your Oblivion Mod Directory
-set "DEST_DIR=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\Content\Paks\LogicMods\KwaNotificationsBP_P"
+set "DEST_DIR=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\Content\Paks\LogicMods\KwaMusicBP_P"
 ::Your chunk labelled pak name (without the .pak / ucas file extension)
-set "PAKNAME=pakchunk248-Windows"
+set "PAKNAME=pakchunk250-Windows"
 ::Your renamed pak name (the name you want it to be changed to in logicmods folder)
-set "RENAME=KwaNotificationsBP_P"
+set "RENAME=KwaMusicBP_P"
 
 :: Your lua mod directory
 set "SOURCE_DIR_LUA=%~dp0"
 :: Your Lua Mod Directory
-set "DEST_DIR_LUA=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\Binaries\Win64\ue4ss\mods\KwaNotificationsLua\Scripts"
+set "DEST_DIR_LUA=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\Binaries\Win64\ue4ss\mods\KwaMusicLua\Scripts"
 ::Your lua mod name
 set "LUA_NAME=main.lua"
 
@@ -100,6 +107,9 @@ if defined missing_lua_file (
     echo "%DEST_DIR_LUA%"
 )
 endlocal
+
+"C:\Program Files (x86)\Steam\steam.exe" steam://rungameid/2623190
+
 timeout /t 2
 
 
