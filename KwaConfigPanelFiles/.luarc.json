@@ -1,0 +1,19 @@
+{
+    "diagnostics": {
+        "disable": [
+            "undefined-global",
+            "undefined-field",
+            "need-check-nil",
+            "param-type-mismatch"
+        ]
+    },
+    "runtime": {
+        "version": "Lua 5.1"
+    },
+    "type": {
+        "weakNilCheck": true,
+        "weakUnionCheck": true
+    },
+    "Lua": {
+    }
+} 
