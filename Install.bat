@@ -17,7 +17,7 @@ set "RENAME2=KwaNotificationsBP_P"
 
 :: Lua Main
 set "SOURCE_DIR_LUA=%~dp0\KwaNotifsFiles\"
-set %LUA_NAME%=main.lua
+set "LUA_NAME=main.lua"
 :: Lua Mod Directory
 set "DEST_DIR_LUA=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\Binaries\Win64\ue4ss\mods\KwaNotificationsLua\Scripts"
 set "RELEASE_DIR_LUA=%~dp0\Release\KwaNotificationsRelease\OblivionRemastered\Binaries\Win64\ue4ss\mods\KwaNotificationsLua\Scripts"
