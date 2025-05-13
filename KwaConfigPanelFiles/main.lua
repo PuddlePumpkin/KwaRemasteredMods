@@ -16,7 +16,7 @@ LoopAsync(3000, function()
     -- Add rows to the mod panel
     AddRowSectionLabel(ModPanel, "TEST LABEL")
     AddRowLabel(ModPanel, "TEST LABEL 2")
-    AddRowSlider(ModPanel, "Slider", "SliderSaveLabel1", 0, 10, 0, "", 0, false, 1)
+    AddRowSlider(ModPanel, "Slider", "SliderSaveLabel1", 0, 100, 1)
     -- Register callback
     RegisterCallback("SliderSaveLabel1", function(value)
         print("Successfully heard callback:", value)
