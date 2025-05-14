@@ -17,6 +17,7 @@ LoopAsync(3000, function()
     AddRowSectionLabel(ModPanel, "TEST LABEL")
     AddRowLabel(ModPanel, "TEST LABEL 2")
     AddRowSlider(ModPanel, "Slider", "SliderSaveLabel1", 0, 100, 1)
+    AddRowSeparator(ModPanel,"False")
     -- Register callback
     RegisterCallback("SliderSaveLabel1", function(value)
         print("Successfully heard callback:", value)

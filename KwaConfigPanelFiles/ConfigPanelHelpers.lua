@@ -32,21 +32,21 @@ local function GetFlairType(flairType)
 end
 
 ---@param modPanel table The mod configuration panel
----@param labelText string Text to display in the section label
+---@param labelText string Text to display in the section header
 ---@param flairType string|nil The flair type (OblivionFlairTop/OblivionFlairTopAndBottom/OblivionFlairBottom/NoFlair)
-function AddRowSectionLabel(modPanel, labelText, flairType)
+function AddRowSectionHeader(modPanel, labelText, flairType)
     if not modPanel then 
-        print("AddRowSectionLabel: modPanel is nil")
+        print("AddRowSectionHeader: modPanel is nil")
         return 
     end
     if not modPanel:IsValid() then
-        print("AddRowSectionLabel: modPanel is not valid")
+        print("AddRowSectionHeader: modPanel is not valid")
         return
     end
-    print("Adding section label:", labelText)
+    print("Adding section header:", labelText)
     local ReturnValue = {}
-    modPanel:AddRowSectionLabel(FText(labelText), flairType or "NoFlair", ReturnValue)
-    print("Section label added")
+    modPanel:AddRowSectionHeader(FText(labelText), flairType or "NoFlair", ReturnValue)
+    print("Section header added")
 end
 
 ---@param modPanel table The mod configuration panel
