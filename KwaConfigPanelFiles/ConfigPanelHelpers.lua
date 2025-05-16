@@ -16,56 +16,88 @@ RegisterHook = RegisterHook or function(path, callback) end
 ---@type fun(className: string): table
 FindFirstOf = FindFirstOf or function(className) return {} end
 
----@param flairType number|string Number (0-3) or string ("NoFlair", "OblivionFlairTop", "OblivionFlairTopAndBottom", "OblivionFlairBottom")
+-- -------------------------------------------------------
+-- HeaderTypes
+-- -------------------------------------------------------
+---@param styleType number|string Number (0-5) or string ("SectionHeader", "FlairTop", "FlairBottom", "FlairTopAndBottom", "LineBottom", "Label")
 ---@return string
-local function GetFlairType(flairType)
-    if type(flairType) == "number" then
-        local flairTypes = {
-            [0] = "NoFlair",
-            [1] = "OblivionFlairTop",
-            [2] = "OblivionFlairTopAndBottom",
-            [3] = "OblivionFlairBottom"
+local function GetHeaderType(styleType)
+    if type(styleType) == "number" then
+        local styleTypes = {
+            [0] = "SectionHeader",
+            [1] = "FlairTop",
+            [2] = "FlairBottom",
+            [3] = "FlairTopAndBottom",
+            [4] = "LineBottom",
+            [5] = "Label"
         }
-        return flairTypes[flairType] or "NoFlair"
+        return styleTypes[styleType] or "Label"
     end
-    return flairType or "NoFlair"
+    return styleType or "Label"
+end
+-- -------------------------------------------------------
+-- FontTypes
+-- -------------------------------------------------------
+---@param fontType number|string Number (0-5) or string ("Kingthings", "Robinson", "Scrivano")
+---@return string
+local function GetFontType(fontType)
+    if type(fontType) == "number" then
+        local fontTypes = {
+            [0] = "Kingthings",
+            [1] = "Robinson",
+            [2] = "Scrivano",
+        }
+        return fontTypes[fontType] or "Label"
+    end
+    return fontType or "Label"
 end
 
+-- -------------------------------------------------------
+-- Rows
+-- -------------------------------------------------------
+-- -------------------------------------------------------
+-- Section Header
+-- -------------------------------------------------------
 ---@param modPanel table The mod configuration panel
 ---@param labelText string Text to display in the section header
----@param flairType string|nil The flair type (OblivionFlairTop/OblivionFlairTopAndBottom/OblivionFlairBottom/NoFlair)
-function AddRowSectionHeader(modPanel, labelText, flairType)
-    if not modPanel then 
-        print("AddRowSectionHeader: modPanel is nil")
-        return 
-    end
-    if not modPanel:IsValid() then
-        print("AddRowSectionHeader: modPanel is not valid")
+---@param style number|string|nil The style type (number 0-5 or string name)
+---@param font number|string|nil The font to use (number 0-2 or string name)
+---@param fontsize number the size of the font to use (default 25)
+function AddRowSectionHeader(modPanel, labelText, style, font, fontsize)
+    if not modPanel or not modPanel:IsValid() then
+        print("Invalid mod panel")
         return
     end
-    print("Adding section header:", labelText)
+    
+    local resolvedStyle = GetHeaderType(style or 5)  -- Default to "Label"
+    local resolvedFont = GetFontType(font or 0)  -- Default to "Kingthings"
+    print("Adding section header:", labelText, "Type:", resolvedStyle, "Font:", resolvedFont)
+    
     local ReturnValue = {}
-    modPanel:AddRowSectionHeader(FText(labelText), flairType or "NoFlair", ReturnValue)
-    print("Section header added")
+    modPanel:AddRowSectionHeader(FText(labelText), resolvedStyle, resolvedFont, fontsize or 25, ReturnValue)
 end
 
+
+-- -------------------------------------------------------
+-- Separator
+-- -------------------------------------------------------
 ---@param modPanel table The mod configuration panel
----@param labelText string Text to display in the label
-function AddRowLabel(modPanel, labelText)
-    if not modPanel then 
-        print("AddRowLabel: modPanel is nil")
-        return 
-    end
-    if not modPanel:IsValid() then
-        print("AddRowLabel: modPanel is not valid")
+---@param height number height of the separator (default: 16)
+---@param showLine boolean enable to show the line (default: true)
+function AddRowSeparator(modPanel, height, showline)
+    if not modPanel or not modPanel:IsValid() then
+        print("Invalid mod panel")
         return
     end
-    print("Adding label:", labelText)
+    print("Adding Separator")
+    
     local ReturnValue = {}
-    modPanel:AddRowLabel(FText(labelText), ReturnValue)
-    print("Label added")
+    modPanel:AddRowSeparator(height or 16,showline or true, ReturnValue)
 end
 
+-- -------------------------------------------------------
+-- Slider
+-- -------------------------------------------------------
 ---@param modPanel table The mod configuration panel
 ---@param label string Label text for the slider
 ---@param uniqueSaveLabel string Unique identifier for saving the value
@@ -102,11 +134,20 @@ function AddRowSlider(modPanel, label, uniqueSaveLabel, minValue, maxValue, defa
     print("Slider added")
 end
 
+-- -------------------------------------------------------
+-- Load Params
+-- -------------------------------------------------------
 ---@param modPanel table The mod configuration panel
 function LoadParameters(modPanel)
     if not modPanel then return end
     modPanel:LoadParameters()
 end
+
+
+
+-- -------------------------------------------------------
+-- Callback Hooks
+-- -------------------------------------------------------
 
 ---@class ModPanel
 ---@field YourPanel table The mod's configuration panel
@@ -135,7 +176,7 @@ local function SetupCallbacks()
         if HookCreated.float then return true end
         if pcall(function()
             print("Registering float callback hook")
-            RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KCModPanel.WBP_KCModPanel_C:LuaFloatCallback", 
+            RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaFloatCallback", 
                 function(context, ParameterName, ParameterValue)
                     local name = ParameterName:get():ToString()
                     print("Float callback received for parameter:", name, "value:", ParameterValue:get())
@@ -166,7 +207,7 @@ local function SetupCallbacks()
     LoopAsync(3000, function()
         if HookCreated.int then return true end
         if pcall(function()
-            RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KCModPanel.WBP_KCModPanel_C:LuaIntCallback", 
+            RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaIntCallback", 
                 function(context, ParameterName, ParameterValue)
                     local name = ParameterName:get():ToString()
                     if Callbacks[name] then
@@ -183,7 +224,7 @@ local function SetupCallbacks()
     LoopAsync(3000, function()
         if HookCreated.string then return true end
         if pcall(function()
-            RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KCModPanel.WBP_KCModPanel_C:LuaStringCallback", 
+            RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaStringCallback", 
                 function(context, ParameterName, ParameterValue)
                     local name = ParameterName:get():ToString()
                     if Callbacks[name] then
@@ -200,7 +241,7 @@ local function SetupCallbacks()
     LoopAsync(3000, function()
         if HookCreated.stringArray then return true end
         if pcall(function()
-            RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KCModPanel.WBP_KCModPanel_C:LuaStringArrayCallback", 
+            RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaStringArrayCallback", 
                 function(context, ParameterName, ParameterValue)
                     local name = ParameterName:get():ToString()
                     if Callbacks[name] then
@@ -217,7 +258,7 @@ local function SetupCallbacks()
     LoopAsync(3000, function()
         if HookCreated.bool then return true end
         if pcall(function()
-            RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KCModPanel.WBP_KCModPanel_C:LuaBoolCallback", 
+            RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaBoolCallback", 
                 function(context, ParameterName, ParameterValue)
                     local name = ParameterName:get():ToString()
                     if Callbacks[name] then
@@ -231,7 +272,12 @@ local function SetupCallbacks()
     end)
 end
 
-local PanelRegistered = false
+
+-- -------------------------------------------------------
+-- Register Mod
+-- -------------------------------------------------------
+
+local bPanelRegistered = false
 local RegisteredPanel = nil
 
 ---@param modName string The name of your mod
@@ -245,7 +291,7 @@ function RegisterMod(modName, doHandleSaves, onlyHandleSaves)
     end
 
     -- If already registered, return the existing panel
-    if PanelRegistered then
+    if bPanelRegistered then
         return RegisteredPanel
     end
 
@@ -257,9 +303,9 @@ function RegisterMod(modName, doHandleSaves, onlyHandleSaves)
 
     -- Keep trying to register until we succeed
     LoopAsync(3000, function()
-        if PanelRegistered then return true end
+        if bPanelRegistered then return true end
 
-        local MainPanel = FindFirstOf("WBP_KwaConfigPanelMain_C")
+        local MainPanel = FindFirstOf("WBP_KConfigPanel_C")
         if not MainPanel or not MainPanel:IsValid() then
             print("Mod panel not found, retrying...")
             return false
@@ -288,9 +334,115 @@ function RegisterMod(modName, doHandleSaves, onlyHandleSaves)
         print("Callbacks setup complete")
 
         RegisteredPanel = ReturnValue.YourPanel
-        PanelRegistered = true
+        bPanelRegistered = true
         return true
     end)
 
     return RegisteredPanel
+end
+
+-- -------------------------------------------------------
+-- Setters and Getters
+-- -------------------------------------------------------
+
+---@type fun(str: string): FString
+FString = FString or function(str) return str end
+
+---@param modPanel table The mod configuration panel
+---@param uniqueSaveLabel string The unique identifier for the parameter
+---@return integer
+function GetIntParameter(modPanel, uniqueSaveLabel)
+    if not modPanel or not modPanel:IsValid() then return 0 end
+    local ReturnValue = { Value = 0 }
+    modPanel:GetIntParameter(FName(uniqueSaveLabel), ReturnValue)
+    return ReturnValue.Value or 0
+end
+
+---@param modPanel table The mod configuration panel
+---@param uniqueSaveLabel string The unique identifier for the parameter
+---@param value integer
+function SetIntParameter(modPanel, uniqueSaveLabel, value)
+    if not modPanel or not modPanel:IsValid() then return end
+    modPanel:SetIntParameter(FName(uniqueSaveLabel), math.floor(value))
+end
+
+---@param modPanel table The mod configuration panel
+---@param uniqueSaveLabel string The unique identifier for the parameter
+---@return number
+function GetFloatParameter(modPanel, uniqueSaveLabel)
+    if not modPanel or not modPanel:IsValid() then return 0.0 end
+    local ReturnValue = { Value = 0.0 }
+    modPanel:GetFloatParameter(FName(uniqueSaveLabel), ReturnValue)
+    return ReturnValue.Value or 0.0
+end
+
+---@param modPanel table The mod configuration panel
+---@param uniqueSaveLabel string The unique identifier for the parameter
+---@param value number
+function SetFloatParameter(modPanel, uniqueSaveLabel, value)
+    if not modPanel or not modPanel:IsValid() then return end
+    modPanel:SetFloatParameter(FName(uniqueSaveLabel), value)
+end
+
+---@param modPanel table The mod configuration panel
+---@param uniqueSaveLabel string The unique identifier for the parameter
+---@return string
+function GetStringParameter(modPanel, uniqueSaveLabel)
+    if not modPanel or not modPanel:IsValid() then return "" end
+    local ReturnValue = { Value = FString("") }
+    modPanel:GetStringParameter(FName(uniqueSaveLabel), ReturnValue)
+    return ReturnValue.Value:ToString() or ""
+end
+
+---@param modPanel table The mod configuration panel
+---@param uniqueSaveLabel string The unique identifier for the parameter
+---@param value string
+function SetStringParameter(modPanel, uniqueSaveLabel, value)
+    if not modPanel or not modPanel:IsValid() then return end
+    modPanel:SetStringParameter(FName(uniqueSaveLabel), FString(value))
+end
+
+---@param modPanel table The mod configuration panel
+---@param uniqueSaveLabel string The unique identifier for the parameter
+---@return string[]
+function GetStringArrayParameter(modPanel, uniqueSaveLabel)
+    if not modPanel or not modPanel:IsValid() then return {} end
+    local ReturnValue = { Array = {} }
+    modPanel:GetStringArrayParameter(FName(uniqueSaveLabel), ReturnValue)
+    
+    local luaArray = {}
+    for i = 0, ReturnValue.Array:Num() - 1 do
+        table.insert(luaArray, ReturnValue.Array:Get(i):ToString())
+    end
+    return luaArray
+end
+
+---@param modPanel table The mod configuration panel
+---@param uniqueSaveLabel string The unique identifier for the parameter
+---@param value string[]
+function SetStringArrayParameter(modPanel, uniqueSaveLabel, value)
+    if not modPanel or not modPanel:IsValid() then return end
+    local param = { Array = {} }
+    for _, str in ipairs(value) do
+        param.Array:Add(FString(str))
+    end
+    modPanel:SetStringArrayParameter(FName(uniqueSaveLabel), param)
+end
+
+---@param modPanel table The mod configuration panel
+---@param uniqueSaveLabel string The unique identifier for the parameter
+---@return boolean
+function GetBoolParameter(modPanel, uniqueSaveLabel)
+    if not modPanel or not modPanel:IsValid() then return false end
+    local ReturnValue = { Value = false }
+    modPanel:GetBoolParameter(FName(uniqueSaveLabel), ReturnValue)
+    return ReturnValue.Value or false
+end
+
+---@param modPanel table The mod configuration panel
+---@param uniqueSaveLabel string The unique identifier for the parameter
+---@param value boolean
+function SetBoolParameter(modPanel, uniqueSaveLabel, value)
+    if not modPanel or not modPanel:IsValid() then return end
+    modPanel:SetBoolParameter(FName(uniqueSaveLabel), value and true or false)
 end

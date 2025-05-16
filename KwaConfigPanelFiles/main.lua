@@ -14,16 +14,19 @@ LoopAsync(3000, function()
     print("Panel ready, adding rows")
     
     -- Add rows to the mod panel
-    AddRowSectionLabel(ModPanel, "TEST LABEL")
-    AddRowLabel(ModPanel, "TEST LABEL 2")
-    AddRowSlider(ModPanel, "Slider", "SliderSaveLabel1", 0, 100, 1)
-    AddRowSeparator(ModPanel,"False")
-    -- Register callback
-    RegisterCallback("SliderSaveLabel1", function(value)
+    AddRowSectionHeader(ModPanel, "TEST LABEL")
+    AddRowSeparator(ModPanel)
+    AddRowSlider(ModPanel, "Slider", "SliderSave1", 0, 100, 1)
+    AddRowSeparator(ModPanel,40,"True")
+    -- Register slider callback
+    RegisterCallback("SliderSave1", function(value)
         print("Successfully heard callback:", value)
     end)
     -- Load parameters after setup is done
     LoadParameters(ModPanel)
+    SetStringParameter("TestParameter", "Test")
+    GetStringParameter(ModPanel"Test")
+
     
     print("Panel setup complete")
     return true

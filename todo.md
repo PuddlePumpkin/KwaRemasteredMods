@@ -16,7 +16,7 @@ add new rows
 ## Notifications:
 Move notification to hook
 Add bool param option to disable save notificaitons
-
+Add switch option for blacklist types
 
 
 
