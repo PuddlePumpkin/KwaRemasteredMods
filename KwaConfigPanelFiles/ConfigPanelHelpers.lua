@@ -165,7 +165,14 @@ local mod_panel_callbacks = {}
 ---@param saveId string The unique save ID of the parameter
 ---@param callback fun(value: any) Callback function that receives the changed value
 function RegisterCallback(modPanel, saveId, callback)
+    if not modPanel or not modPanel:IsValid() then
+        print("RegisterCallback: Invalid mod panel")
+        return
+    end
+    
     local addr = modPanel:GetAddress()
+    print("Registering callback for panel:", addr, "param:", saveId)
+    
     if not mod_panel_callbacks[addr] then
         mod_panel_callbacks[addr] = {}
     end
@@ -179,108 +186,72 @@ local function SetupCallbacks()
         if pcall(function()
             print("Registering float callback hook")
             RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaFloatCallback", 
-                function(context, ParameterName, ParameterValue)
+                function(PanelRef, ParameterName, ParameterValue)
+                    -- Get the actual panel instance from the reference
+                    local panelInstance = PanelRef:get()
+                    if not panelInstance or not panelInstance.IsValid or not panelInstance:IsValid() then
+                        print("Invalid panel reference in float callback")
+                        return
+                    end
+                    
+                    -- Get identifying information
+                    local addr = panelInstance:GetAddress()
                     local name = ParameterName:get():ToString()
-                    local mod_panel_addr = context:GetAddress()
-                    print("Float callback received for parameter:", name, "value:", ParameterValue:get(), "on mod_panel:", mod_panel_addr)
-                    local callbacks = mod_panel_callbacks[mod_panel_addr]
-                    if callbacks and callbacks[name] then
-                        callbacks[name](ParameterValue:get())
+                    local value = ParameterValue:get()
+                    
+                    print(string.format("Float callback: Panel %s | Param %s | Value %s", addr, name, value))
+                    
+                    -- Find and execute callback
+                    local panelCallbacks = mod_panel_callbacks[addr]
+                    if panelCallbacks and panelCallbacks[name] then
+                        panelCallbacks[name](value)
                     else
-                        print("No callback registered for:", name, "on mod_panel:", mod_panel_addr)
-                        if callbacks then
-                            local registered_callbacks = ""
-                            for k,_ in pairs(callbacks) do
-                                if registered_callbacks ~= "" then
-                                    registered_callbacks = registered_callbacks .. ", "
-                                end
-                                registered_callbacks = registered_callbacks .. k
-                            end
-                            print("Currently registered callbacks for this mod_panel:", registered_callbacks)
-                        else
-                            print("No callbacks registered for this mod_panel")
-                        end
+                        print(string.format("No callback found for %s in panel %s", name, addr))
                     end
                 end)
+            
             print("Float callback hook registered successfully")
             HookCreated.float = true
             return true
-        end) then
-            return true
+        end) then return true
         else
             print("Failed to register float callback hook")
+            return false
         end
     end)
-
-    -- Int callback
     LoopAsync(3000, function()
         if HookCreated.int then return true end
         if pcall(function()
             print("Registering int callback hook")
             RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaIntCallback", 
-                function(context, ParameterName, ParameterValue)
+                function(PanelRef, ParameterName, ParameterValue)
+                    local panelInstance = PanelRef:get()
+                    if not panelInstance or not panelInstance.IsValid or not panelInstance:IsValid() then
+                        print("Invalid panel reference in int callback")
+                        return
+                    end
+                    
+                    local addr = panelInstance:GetAddress()
                     local name = ParameterName:get():ToString()
-                    local mod_panel_addr = context:GetAddress()
-                    local callbacks = mod_panel_callbacks[mod_panel_addr]
-                    if callbacks and callbacks[name] then
-                        callbacks[name](ParameterValue:get())
+                    local value = math.floor(ParameterValue:get())  -- Ensure integer value
+                    
+                    print(string.format("Int callback: Panel %s | Param %s | Value %d", addr, name, value))
+                    
+                    local panelCallbacks = mod_panel_callbacks[addr]
+                    if panelCallbacks and panelCallbacks[name] then
+                        panelCallbacks[name](value)
+                    else
+                        print(string.format("No int callback for %s in panel %s", name, addr))
                     end
                 end)
+            
             print("Int callback hook registered successfully")
             HookCreated.int = true
             return true
-        end) then
-            return true
+        end) then return true
         else
             print("Failed to register int callback hook")
-        end
-    end)
-
-    -- String callback
-    LoopAsync(3000, function()
-        if HookCreated.string then return true end
-        if pcall(function()
-            print("Registering string callback hook")
-            RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaStringCallback", 
-                function(context, ParameterName, ParameterValue)
-                    local name = ParameterName:get():ToString()
-                    local mod_panel_addr = context:GetAddress()
-                    local callbacks = mod_panel_callbacks[mod_panel_addr]
-                    if callbacks and callbacks[name] then
-                        callbacks[name](ParameterValue:get())
-                    end
-                end)
-            print("String callback hook registered successfully")
-            HookCreated.string = true
-            return true
-        end) then
-            return true
-        else
-            print("Failed to register string callback hook")
-        end
-    end)
-
-    -- StringArray callback
-    LoopAsync(3000, function()
-        if HookCreated.stringArray then return true end
-        if pcall(function()
-            print("Registering stringArray callback hook")
-            RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaStringArrayCallback", 
-                function(context, ParameterName, ParameterValue)
-                    local name = ParameterName:get():ToString()
-                    local mod_panel_addr = context:GetAddress()
-                    local callbacks = mod_panel_callbacks[mod_panel_addr]
-                    if callbacks and callbacks[name] then
-                        callbacks[name](ParameterValue:get())
-                    end
-                end)
-            print("StringArray callback hook registered successfully")
-            HookCreated.stringArray = true
-            return true
-        end) then
-            return true
-        else
-            print("Failed to register stringArray callback hook")
+            return false
         end
     end)
 
@@ -290,21 +261,115 @@ local function SetupCallbacks()
         if pcall(function()
             print("Registering bool callback hook")
             RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaBoolCallback", 
-                function(context, ParameterName, ParameterValue)
+                function(PanelRef, ParameterName, ParameterValue)
+                    local panelInstance = PanelRef:get()
+                    if not panelInstance or not panelInstance.IsValid or not panelInstance:IsValid() then
+                        print("Invalid panel reference in bool callback")
+                        return
+                    end
+                    
+                    local addr = panelInstance:GetAddress()
                     local name = ParameterName:get():ToString()
-                    local mod_panel_addr = context:GetAddress()
-                    local callbacks = mod_panel_callbacks[mod_panel_addr]
-                    if callbacks and callbacks[name] then
-                        callbacks[name](ParameterValue:get())
+                    local value = ParameterValue:get() and true or false  -- Force boolean
+                    
+                    print(string.format("Bool callback: Panel %s | Param %s | Value %s", addr, name, tostring(value)))
+                    
+                    local panelCallbacks = mod_panel_callbacks[addr]
+                    if panelCallbacks and panelCallbacks[name] then
+                        panelCallbacks[name](value)
+                    else
+                        print(string.format("No bool callback for %s in panel %s", name, addr))
                     end
                 end)
+            
             print("Bool callback hook registered successfully")
             HookCreated.bool = true
             return true
-        end) then
-            return true
+        end) then return true
         else
             print("Failed to register bool callback hook")
+            return false
+        end
+    end)
+
+    -- String callback
+    LoopAsync(3000, function()
+        if HookCreated.string then return true end
+        if pcall(function()
+            print("Registering string callback hook")
+            RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaStringCallback", 
+                function(PanelRef, ParameterName, ParameterValue)
+                    local panelInstance = PanelRef:get()
+                    if not panelInstance or not panelInstance.IsValid or not panelInstance:IsValid() then
+                        print("Invalid panel reference in string callback")
+                        return
+                    end
+                    
+                    local addr = panelInstance:GetAddress()
+                    local name = ParameterName:get():ToString()
+                    local value = ParameterValue:get():ToString()
+                    
+                    print(string.format("String callback: Panel %s | Param %s | Value %s", addr, name, value))
+                    
+                    local panelCallbacks = mod_panel_callbacks[addr]
+                    if panelCallbacks and panelCallbacks[name] then
+                        panelCallbacks[name](value)
+                    else
+                        print(string.format("No string callback for %s in panel %s", name, addr))
+                    end
+                end)
+            
+            print("String callback hook registered successfully")
+            HookCreated.string = true
+            return true
+        end) then return true
+        else
+            print("Failed to register string callback hook")
+            return false
+        end
+    end)
+
+    -- String Array callback
+    LoopAsync(3000, function()
+        if HookCreated.stringArray then return true end
+        if pcall(function()
+            print("Registering string array callback hook")
+            RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaStringArrayCallback", 
+                function(PanelRef, ParameterName, ParameterValue)
+                    local panelInstance = PanelRef:get()
+                    if not panelInstance or not panelInstance.IsValid or not panelInstance:IsValid() then
+                        print("Invalid panel reference in string array callback")
+                        return
+                    end
+                    
+                    local addr = panelInstance:GetAddress()
+                    local name = ParameterName:get():ToString()
+                    local valueArray = {}
+                    
+                    -- Convert UE4 Array to Lua table
+                    local ueArray = ParameterValue:get().Array
+                    for i = 1, ueArray:Num() do
+                        table.insert(valueArray, ueArray:Get(i):ToString())
+                    end
+                    
+                    print(string.format("StringArray callback: Panel %s | Param %s | Values %d", 
+                        addr, name, #valueArray))
+                    
+                    local panelCallbacks = mod_panel_callbacks[addr]
+                    if panelCallbacks and panelCallbacks[name] then
+                        panelCallbacks[name](valueArray)
+                    else
+                        print(string.format("No string array callback for %s in panel %s", name, addr))
+                    end
+                end)
+            
+            print("String array callback hook registered successfully")
+            HookCreated.stringArray = true
+            return true
+        end) then return true
+        else
+            print("Failed to register string array callback hook")
+            return false
         end
     end)
 end
