@@ -66,13 +66,13 @@ end
 ---@param fontsize number the size of the font to use (default 25)
 function AddRowSectionHeader(modPanel, labelText, style, font, fontsize)
     if not modPanel or not modPanel:IsValid() then
-        print("Invalid mod panel")
+        print("[KCnfg] Invalid mod panel")
         return
     end
     
     local resolvedStyle = GetHeaderType(style or 5)  -- Default to "Label"
     local resolvedFont = GetFontType(font or 0)  -- Default to "Kingthings"
-    print("Adding section header:", labelText, "Type:", resolvedStyle, "Font:", resolvedFont)
+    print("[KCnfg] Adding section header:", labelText, "Type:", resolvedStyle, "Font:", resolvedFont)
     
     local ReturnValue = {}
     modPanel:AddRowSectionHeader(FText(labelText), resolvedStyle, resolvedFont, fontsize or 25, ReturnValue)
@@ -89,7 +89,7 @@ function AddRowSeparator(modPanel, height, showline)
         print("Invalid mod panel")
         return
     end
-    print("Adding Separator")
+    print("[KCnfg] Adding Separator")
     
     local ReturnValue = {}
     modPanel:AddRowSeparator(height or 16, showline or true, ReturnValue)
@@ -110,14 +110,14 @@ end
 ---@param snapSize number|nil Size of snap increments (default: 1)
 function AddRowSlider(modPanel, label, uniqueSaveLabel, minValue, maxValue, defaultValue, numberSuffix, decimalCount, snapSlider, snapSize)
     if not modPanel then 
-        print("AddRowSlider: modPanel is nil")
+        print("[KCnfg] AddRowSlider: modPanel is nil")
         return 
     end
     if not modPanel:IsValid() then
-        print("AddRowSlider: modPanel is not valid")
+        print("[KCnfg] AddRowSlider: modPanel is not valid")
         return
     end
-    print("Adding slider:", label, "with id:", uniqueSaveLabel)
+    print("[KCnfg] Adding slider:", label, "with id:", uniqueSaveLabel)
     local ReturnValue = {}
     modPanel:AddRowSlider(
         FText(label),
@@ -131,7 +131,7 @@ function AddRowSlider(modPanel, label, uniqueSaveLabel, minValue, maxValue, defa
         snapSize or 1,
         ReturnValue
     )
-    print("Slider added")
+    print("[KCnfg] Slider added")
 end
 
 -- -------------------------------------------------------
@@ -166,12 +166,12 @@ local mod_panel_callbacks = {}
 ---@param callback fun(value: any) Callback function that receives the changed value
 function RegisterCallback(modPanel, saveId, callback)
     if not modPanel or not modPanel:IsValid() then
-        print("RegisterCallback: Invalid mod panel")
+        print("[KCnfg] RegisterCallback: Invalid mod panel")
         return
     end
     
     local addr = modPanel:GetAddress()
-    print("Registering callback for panel:", addr, "param:", saveId)
+    print("[KCnfg] Registering callback for panel:", addr, "param:", saveId)
     
     if not mod_panel_callbacks[addr] then
         mod_panel_callbacks[addr] = {}
@@ -180,17 +180,17 @@ function RegisterCallback(modPanel, saveId, callback)
 end
 
 local function SetupCallbacks()
-    -- Float callback
+    -- Float hook
     LoopAsync(3000, function()
         if HookCreated.float then return true end
         if pcall(function()
-            print("Registering float callback hook")
+            print("[KCnfg] Registering float callback hook")
             RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaFloatCallback", 
                 function(PanelRef, ParameterName, ParameterValue)
                     -- Get the actual panel instance from the reference
                     local panelInstance = PanelRef:get()
                     if not panelInstance or not panelInstance.IsValid or not panelInstance:IsValid() then
-                        print("Invalid panel reference in float callback")
+                        print("[KCnfg] Invalid panel reference in float callback")
                         return
                     end
                     
@@ -210,24 +210,25 @@ local function SetupCallbacks()
                     end
                 end)
             
-            print("Float callback hook registered successfully")
+            print("[KCnfg] Float callback hook registered successfully")
             HookCreated.float = true
             return true
         end) then return true
         else
-            print("Failed to register float callback hook")
+            print("[KCnfg] Failed to register float callback hook")
             return false
         end
     end)
+    -- Int hook
     LoopAsync(3000, function()
         if HookCreated.int then return true end
         if pcall(function()
-            print("Registering int callback hook")
+            print("[KCnfg] Registering int callback hook")
             RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaIntCallback", 
                 function(PanelRef, ParameterName, ParameterValue)
                     local panelInstance = PanelRef:get()
                     if not panelInstance or not panelInstance.IsValid or not panelInstance:IsValid() then
-                        print("Invalid panel reference in int callback")
+                        print("[KCnfg] Invalid panel reference in int callback")
                         return
                     end
                     
@@ -245,26 +246,26 @@ local function SetupCallbacks()
                     end
                 end)
             
-            print("Int callback hook registered successfully")
+            print("[KCnfg] Int callback hook registered successfully")
             HookCreated.int = true
             return true
         end) then return true
         else
-            print("Failed to register int callback hook")
+            print("[KCnfg] Failed to register int callback hook")
             return false
         end
     end)
 
-    -- Bool callback
+    -- Bool hook
     LoopAsync(3000, function()
         if HookCreated.bool then return true end
         if pcall(function()
-            print("Registering bool callback hook")
+            print("[KCnfg] Registering bool callback hook")
             RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaBoolCallback", 
                 function(PanelRef, ParameterName, ParameterValue)
                     local panelInstance = PanelRef:get()
                     if not panelInstance or not panelInstance.IsValid or not panelInstance:IsValid() then
-                        print("Invalid panel reference in bool callback")
+                        print("[KCnfg] Invalid panel reference in bool callback")
                         return
                     end
                     
@@ -282,26 +283,26 @@ local function SetupCallbacks()
                     end
                 end)
             
-            print("Bool callback hook registered successfully")
+            print("[KCnfg] Bool callback hook registered successfully")
             HookCreated.bool = true
             return true
         end) then return true
         else
-            print("Failed to register bool callback hook")
+            print("[KCnfg] Failed to register bool callback hook")
             return false
         end
     end)
 
-    -- String callback
+    -- String hook
     LoopAsync(3000, function()
         if HookCreated.string then return true end
         if pcall(function()
-            print("Registering string callback hook")
+            print("[KCnfg] Registering string callback hook")
             RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaStringCallback", 
                 function(PanelRef, ParameterName, ParameterValue)
                     local panelInstance = PanelRef:get()
                     if not panelInstance or not panelInstance.IsValid or not panelInstance:IsValid() then
-                        print("Invalid panel reference in string callback")
+                        print("[KCnfg] Invalid panel reference in string callback")
                         return
                     end
                     
@@ -319,26 +320,26 @@ local function SetupCallbacks()
                     end
                 end)
             
-            print("String callback hook registered successfully")
+            print("[KCnfg] String callback hook registered successfully")
             HookCreated.string = true
             return true
         end) then return true
         else
-            print("Failed to register string callback hook")
+            print("[KCnfg] Failed to register string callback hook")
             return false
         end
     end)
 
-    -- String Array callback
+    -- String Array hook
     LoopAsync(3000, function()
         if HookCreated.stringArray then return true end
         if pcall(function()
-            print("Registering string array callback hook")
+            print("[KCnfg] Registering string array callback hook")
             RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaStringArrayCallback", 
                 function(PanelRef, ParameterName, ParameterValue)
                     local panelInstance = PanelRef:get()
                     if not panelInstance or not panelInstance.IsValid or not panelInstance:IsValid() then
-                        print("Invalid panel reference in string array callback")
+                        print("[KCnfg] Invalid panel reference in string array callback")
                         return
                     end
                     
@@ -363,12 +364,12 @@ local function SetupCallbacks()
                     end
                 end)
             
-            print("String array callback hook registered successfully")
+            print("[KCnfg] String array callback hook registered successfully")
             HookCreated.stringArray = true
             return true
         end) then return true
         else
-            print("Failed to register string array callback hook")
+            print("[KCnfg] Failed to register string array callback hook")
             return false
         end
     end)
@@ -396,7 +397,7 @@ function RegisterMod(modName, doHandleSaves, onlyHandleSaves)
         return RegisteredPanel
     end
 
-    print("Attempting to register mod:", modName)
+    print("[KCnfg] Attempting to register mod:", modName)
 
     -- Set defaults for boolean parameters
     if doHandleSaves == nil then doHandleSaves = true end
@@ -408,11 +409,11 @@ function RegisterMod(modName, doHandleSaves, onlyHandleSaves)
 
         local MainPanel = FindFirstOf("WBP_KConfigPanel_C")
         if not MainPanel or not MainPanel:IsValid() then
-            print("Mod panel not found, retrying...")
+            print("[KCnfg] Mod panel not found, retrying...")
             return false
         end
         
-        print("Found main panel, attempting to register")
+        print("[KCnfg] Found main panel, attempting to register")
         
         -- Create return value table and register mod
         local ReturnValue = {}
@@ -420,19 +421,19 @@ function RegisterMod(modName, doHandleSaves, onlyHandleSaves)
         
         -- Check if we got the panel
         if not ReturnValue.YourPanel then
-            print("Warning: ReturnValue.YourPanel is nil")
+            print("[KCnfg] Warning: ReturnValue.YourPanel is nil")
             return false
         end
 
-        print("Successfully registered mod")
-        print("Panel object:", ReturnValue.YourPanel)
+        print("[KCnfg] Successfully registered mod")
+        print("[KCnfg] Panel object:", ReturnValue.YourPanel)
         if ReturnValue.YourPanel.IsValid then
-            print("Panel is valid:", ReturnValue.YourPanel:IsValid())
+            print("[KCnfg] Panel is valid:", ReturnValue.YourPanel:IsValid())
         end
         
         -- Only set up callbacks if we successfully registered
         SetupCallbacks()
-        print("Callbacks setup complete")
+        print("[KCnfg] Callbacks setup complete")
 
         RegisteredPanel = ReturnValue.YourPanel
         bPanelRegistered = true
