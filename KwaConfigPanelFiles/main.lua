@@ -19,13 +19,20 @@ LoopAsync(3000, function()
     AddRowSlider(ModPanel, "Slider", "SliderSave1", 0, 100, 1)
     AddRowSeparator(ModPanel,40,"True")
     -- Register slider callback
-    RegisterCallback("SliderSave1", function(value)
+    RegisterCallback(ModPanel, "SliderSave1", function(value)
         print("Successfully heard callback:", value)
     end)
     -- Load parameters after setup is done
     LoadParameters(ModPanel)
-    SetStringParameter("TestParameter", "Test")
-    GetStringParameter(ModPanel"Test")
+    ExecuteWithDelay(3000, function()
+        SetStringParameter(ModPanel,"testid", "testid")
+        print("String Set")
+    end)
+
+    ExecuteWithDelay(5000, function()
+        local value, found = GetStringParameter(ModPanel, "testid")
+        print("After delay: Value:", value, "Found:", found)
+    end)
 
     
     print("Panel setup complete")

@@ -35,6 +35,7 @@ local function GetHeaderType(styleType)
     end
     return styleType or "Label"
 end
+
 -- -------------------------------------------------------
 -- FontTypes
 -- -------------------------------------------------------
@@ -77,7 +78,6 @@ function AddRowSectionHeader(modPanel, labelText, style, font, fontsize)
     modPanel:AddRowSectionHeader(FText(labelText), resolvedStyle, resolvedFont, fontsize or 25, ReturnValue)
 end
 
-
 -- -------------------------------------------------------
 -- Separator
 -- -------------------------------------------------------
@@ -92,7 +92,7 @@ function AddRowSeparator(modPanel, height, showline)
     print("Adding Separator")
     
     local ReturnValue = {}
-    modPanel:AddRowSeparator(height or 16,showline or true, ReturnValue)
+    modPanel:AddRowSeparator(height or 16, showline or true, ReturnValue)
 end
 
 -- -------------------------------------------------------
@@ -143,8 +143,6 @@ function LoadParameters(modPanel)
     modPanel:LoadParameters()
 end
 
-
-
 -- -------------------------------------------------------
 -- Callback Hooks
 -- -------------------------------------------------------
@@ -160,14 +158,18 @@ local HookCreated = {
     bool = false
 }
 
--- Single callback storage
-local Callbacks = {}
+local mod_panel_callbacks = {}
 
 ---Register a callback for when a parameter changes
+---@param modPanel table The mod configuration panel
 ---@param saveId string The unique save ID of the parameter
 ---@param callback fun(value: any) Callback function that receives the changed value
-function RegisterCallback(saveId, callback)
-    Callbacks[saveId] = callback
+function RegisterCallback(modPanel, saveId, callback)
+    local addr = modPanel:GetAddress()
+    if not mod_panel_callbacks[addr] then
+        mod_panel_callbacks[addr] = {}
+    end
+    mod_panel_callbacks[addr][saveId] = callback
 end
 
 local function SetupCallbacks()
@@ -179,24 +181,31 @@ local function SetupCallbacks()
             RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaFloatCallback", 
                 function(context, ParameterName, ParameterValue)
                     local name = ParameterName:get():ToString()
-                    print("Float callback received for parameter:", name, "value:", ParameterValue:get())
-                    if Callbacks[name] then
-                        Callbacks[name](ParameterValue:get())
+                    local mod_panel_addr = context:GetAddress()
+                    print("Float callback received for parameter:", name, "value:", ParameterValue:get(), "on mod_panel:", mod_panel_addr)
+                    local callbacks = mod_panel_callbacks[mod_panel_addr]
+                    if callbacks and callbacks[name] then
+                        callbacks[name](ParameterValue:get())
                     else
-                        print("No callback registered for:", name)
-                        local registeredCallbacks = ""
-                        for k,_ in pairs(Callbacks) do
-                            if registeredCallbacks ~= "" then
-                                registeredCallbacks = registeredCallbacks .. ", "
+                        print("No callback registered for:", name, "on mod_panel:", mod_panel_addr)
+                        if callbacks then
+                            local registered_callbacks = ""
+                            for k,_ in pairs(callbacks) do
+                                if registered_callbacks ~= "" then
+                                    registered_callbacks = registered_callbacks .. ", "
+                                end
+                                registered_callbacks = registered_callbacks .. k
                             end
-                            registeredCallbacks = registeredCallbacks .. k
+                            print("Currently registered callbacks for this mod_panel:", registered_callbacks)
+                        else
+                            print("No callbacks registered for this mod_panel")
                         end
-                        print("Currently registered callbacks:", registeredCallbacks)
                     end
                 end)
             print("Float callback hook registered successfully")
-        end) then
             HookCreated.float = true
+            return true
+        end) then
             return true
         else
             print("Failed to register float callback hook")
@@ -207,16 +216,23 @@ local function SetupCallbacks()
     LoopAsync(3000, function()
         if HookCreated.int then return true end
         if pcall(function()
+            print("Registering int callback hook")
             RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaIntCallback", 
                 function(context, ParameterName, ParameterValue)
                     local name = ParameterName:get():ToString()
-                    if Callbacks[name] then
-                        Callbacks[name](ParameterValue:get())
+                    local mod_panel_addr = context:GetAddress()
+                    local callbacks = mod_panel_callbacks[mod_panel_addr]
+                    if callbacks and callbacks[name] then
+                        callbacks[name](ParameterValue:get())
                     end
                 end)
-        end) then
+            print("Int callback hook registered successfully")
             HookCreated.int = true
             return true
+        end) then
+            return true
+        else
+            print("Failed to register int callback hook")
         end
     end)
 
@@ -224,16 +240,23 @@ local function SetupCallbacks()
     LoopAsync(3000, function()
         if HookCreated.string then return true end
         if pcall(function()
+            print("Registering string callback hook")
             RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaStringCallback", 
                 function(context, ParameterName, ParameterValue)
                     local name = ParameterName:get():ToString()
-                    if Callbacks[name] then
-                        Callbacks[name](ParameterValue:get())
+                    local mod_panel_addr = context:GetAddress()
+                    local callbacks = mod_panel_callbacks[mod_panel_addr]
+                    if callbacks and callbacks[name] then
+                        callbacks[name](ParameterValue:get())
                     end
                 end)
-        end) then
+            print("String callback hook registered successfully")
             HookCreated.string = true
             return true
+        end) then
+            return true
+        else
+            print("Failed to register string callback hook")
         end
     end)
 
@@ -241,16 +264,23 @@ local function SetupCallbacks()
     LoopAsync(3000, function()
         if HookCreated.stringArray then return true end
         if pcall(function()
+            print("Registering stringArray callback hook")
             RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaStringArrayCallback", 
                 function(context, ParameterName, ParameterValue)
                     local name = ParameterName:get():ToString()
-                    if Callbacks[name] then
-                        Callbacks[name](ParameterValue:get())
+                    local mod_panel_addr = context:GetAddress()
+                    local callbacks = mod_panel_callbacks[mod_panel_addr]
+                    if callbacks and callbacks[name] then
+                        callbacks[name](ParameterValue:get())
                     end
                 end)
-        end) then
+            print("StringArray callback hook registered successfully")
             HookCreated.stringArray = true
             return true
+        end) then
+            return true
+        else
+            print("Failed to register stringArray callback hook")
         end
     end)
 
@@ -258,20 +288,26 @@ local function SetupCallbacks()
     LoopAsync(3000, function()
         if HookCreated.bool then return true end
         if pcall(function()
+            print("Registering bool callback hook")
             RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaBoolCallback", 
                 function(context, ParameterName, ParameterValue)
                     local name = ParameterName:get():ToString()
-                    if Callbacks[name] then
-                        Callbacks[name](ParameterValue:get())
+                    local mod_panel_addr = context:GetAddress()
+                    local callbacks = mod_panel_callbacks[mod_panel_addr]
+                    if callbacks and callbacks[name] then
+                        callbacks[name](ParameterValue:get())
                     end
                 end)
-        end) then
+            print("Bool callback hook registered successfully")
             HookCreated.bool = true
             return true
+        end) then
+            return true
+        else
+            print("Failed to register bool callback hook")
         end
     end)
 end
-
 
 -- -------------------------------------------------------
 -- Register Mod
@@ -342,21 +378,10 @@ function RegisterMod(modName, doHandleSaves, onlyHandleSaves)
 end
 
 -- -------------------------------------------------------
--- Setters and Getters
+-- Setters
 -- -------------------------------------------------------
-
 ---@type fun(str: string): FString
 FString = FString or function(str) return str end
-
----@param modPanel table The mod configuration panel
----@param uniqueSaveLabel string The unique identifier for the parameter
----@return integer
-function GetIntParameter(modPanel, uniqueSaveLabel)
-    if not modPanel or not modPanel:IsValid() then return 0 end
-    local ReturnValue = { Value = 0 }
-    modPanel:GetIntParameter(FName(uniqueSaveLabel), ReturnValue)
-    return ReturnValue.Value or 0
-end
 
 ---@param modPanel table The mod configuration panel
 ---@param uniqueSaveLabel string The unique identifier for the parameter
@@ -364,16 +389,6 @@ end
 function SetIntParameter(modPanel, uniqueSaveLabel, value)
     if not modPanel or not modPanel:IsValid() then return end
     modPanel:SetIntParameter(FName(uniqueSaveLabel), math.floor(value))
-end
-
----@param modPanel table The mod configuration panel
----@param uniqueSaveLabel string The unique identifier for the parameter
----@return number
-function GetFloatParameter(modPanel, uniqueSaveLabel)
-    if not modPanel or not modPanel:IsValid() then return 0.0 end
-    local ReturnValue = { Value = 0.0 }
-    modPanel:GetFloatParameter(FName(uniqueSaveLabel), ReturnValue)
-    return ReturnValue.Value or 0.0
 end
 
 ---@param modPanel table The mod configuration panel
@@ -386,35 +401,10 @@ end
 
 ---@param modPanel table The mod configuration panel
 ---@param uniqueSaveLabel string The unique identifier for the parameter
----@return string
-function GetStringParameter(modPanel, uniqueSaveLabel)
-    if not modPanel or not modPanel:IsValid() then return "" end
-    local ReturnValue = { Value = FString("") }
-    modPanel:GetStringParameter(FName(uniqueSaveLabel), ReturnValue)
-    return ReturnValue.Value:ToString() or ""
-end
-
----@param modPanel table The mod configuration panel
----@param uniqueSaveLabel string The unique identifier for the parameter
 ---@param value string
 function SetStringParameter(modPanel, uniqueSaveLabel, value)
     if not modPanel or not modPanel:IsValid() then return end
     modPanel:SetStringParameter(FName(uniqueSaveLabel), FString(value))
-end
-
----@param modPanel table The mod configuration panel
----@param uniqueSaveLabel string The unique identifier for the parameter
----@return string[]
-function GetStringArrayParameter(modPanel, uniqueSaveLabel)
-    if not modPanel or not modPanel:IsValid() then return {} end
-    local ReturnValue = { Array = {} }
-    modPanel:GetStringArrayParameter(FName(uniqueSaveLabel), ReturnValue)
-    
-    local luaArray = {}
-    for i = 0, ReturnValue.Array:Num() - 1 do
-        table.insert(luaArray, ReturnValue.Array:Get(i):ToString())
-    end
-    return luaArray
 end
 
 ---@param modPanel table The mod configuration panel
@@ -431,18 +421,69 @@ end
 
 ---@param modPanel table The mod configuration panel
 ---@param uniqueSaveLabel string The unique identifier for the parameter
----@return boolean
-function GetBoolParameter(modPanel, uniqueSaveLabel)
-    if not modPanel or not modPanel:IsValid() then return false end
-    local ReturnValue = { Value = false }
-    modPanel:GetBoolParameter(FName(uniqueSaveLabel), ReturnValue)
-    return ReturnValue.Value or false
-end
-
----@param modPanel table The mod configuration panel
----@param uniqueSaveLabel string The unique identifier for the parameter
 ---@param value boolean
 function SetBoolParameter(modPanel, uniqueSaveLabel, value)
     if not modPanel or not modPanel:IsValid() then return end
     modPanel:SetBoolParameter(FName(uniqueSaveLabel), value and true or false)
 end
+-- -------------------------------------------------------
+-- Getters
+-- -------------------------------------------------------
+---@param modPanel table The mod configuration panel
+---@param uniqueSaveLabel string The unique identifier for the parameter
+---@return integer, boolean
+function GetIntParameter(modPanel, uniqueSaveLabel)
+    if not modPanel or not modPanel:IsValid() then return 0, false end
+    local Returns = {}
+    local EmptyTable = {}
+    modPanel:GetIntParameter(FName(uniqueSaveLabel), Returns, EmptyTable)
+    return Returns.Output or 0, Returns.Found or false
+end
+
+---@param modPanel table The mod configuration panel
+---@param uniqueSaveLabel string The unique identifier for the parameter
+---@return number, boolean
+function GetFloatParameter(modPanel, uniqueSaveLabel)
+    if not modPanel or not modPanel:IsValid() then return 0.0, false end
+    local Returns = {}
+    local EmptyTable = {}
+    modPanel:GetFloatParameter(FName(uniqueSaveLabel), Returns, EmptyTable)
+    return Returns.Output or 0.0, Returns.Found or false
+end
+
+---@param modPanel table The mod configuration panel
+---@param uniqueSaveLabel string The unique identifier for the parameter
+---@return boolean, boolean
+function GetBoolParameter(modPanel, uniqueSaveLabel)
+    if not modPanel or not modPanel:IsValid() then return false, false end
+    local ValueOut = { Value = false }
+    local FoundOut = { Value = false }
+    modPanel:GetBoolParameter(FName(uniqueSaveLabel), Returns, EmptyTable)
+    return Returns.Output or false, Returns.Found or false
+end
+
+---@param modPanel table The mod configuration panel
+---@param uniqueSaveLabel string The unique identifier for the parameter
+---@return string, boolean
+function GetStringParameter(modPanel, uniqueSaveLabel)
+    if not modPanel or not modPanel:IsValid() then return "", false end
+    local Returns = {}
+    local EmptyTable = {}
+    modPanel:GetStringParameter(FName(uniqueSaveLabel), Returns, EmptyTable)
+    return Returns.Output:ToString() or "", Returns.Found or false
+end
+
+---@param modPanel table The mod configuration panel
+---@param uniqueSaveLabel string The unique identifier for the parameter
+---@return table, boolean
+function GetStringArrayParameter(modPanel, uniqueSaveLabel)
+    if not modPanel or not modPanel:IsValid() then return {}, false end
+    local Returns = {}
+    local EmptyTable = {}
+    modPanel:GetStringArrayParameter(FName(uniqueSaveLabel), Returns, EmptyTable)
+    return Returns.Output.Array or {}, Returns.Found or false
+end
+
+
+
+
