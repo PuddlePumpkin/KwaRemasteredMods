@@ -1,7 +1,7 @@
 require("ConfigPanelHelpers")
 
 
-
+--[[
 -- Try to register and set up the panel
 LoopAsync(3000, function()
     -- Register the mod
@@ -38,3 +38,4 @@ LoopAsync(3000, function()
     print("Panel setup complete")
     return true
 end)
+]]--
