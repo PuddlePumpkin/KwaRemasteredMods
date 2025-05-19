@@ -367,52 +367,74 @@ local function SetupCallbacks()
         if HookCreated.stringArray then return true end
         if pcall(function()
             print("[KCnfg] Registering string array callback hook")
-            RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaStringArrayCallback", 
+            RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaStringArrayCallback",
                 function(PanelRef, ParameterName, ParameterValue)
                     local panelInstance = PanelRef:get()
                     if not panelInstance or not panelInstance.IsValid or not panelInstance:IsValid() then
                         print("[KCnfg] Invalid panel reference in string array callback")
                         return
                     end
-                    
+
                     local addr = panelInstance:GetAddress()
                     local name = ParameterName:get():ToString()
+
+                    local struct = ParameterValue:get()
+                    if not struct then
+                        return
+                    end
+
+                    local array = nil
+                    local success, result = pcall(function()
+                        return struct.Array_5_58F9AD1C48F5AF71237BB784D1D50023
+                    end)
+                    if success and result then
+                        array = result
+                    end
+
+                    if not array then
+                        return
+                    end
+
                     local valueArray = {}
                     
-                    -- Get the struct and its Array property
-                    local struct = ParameterValue:get()
-                    print("[KCnfg] StringArray struct type:", type(struct))
-                    if struct then
-                        local array = struct["Array"]
-                        print("[KCnfg] Array property type:", type(array))
-                        if array then
-                            print("[KCnfg] Array Num() value:", array:Num())
-                            for i = 1, array:Num() do
-                                local value = array:Get(i)
-                                print(string.format("[KCnfg] Array element %d type: %s, value: %s", 
-                                    i, type(value), tostring(value)))
-                                table.insert(valueArray, value:ToString())
+                    local arrayLength = nil
+                    local successLength, len = pcall(function()
+                        return #array
+                    end)
+                    
+                    if successLength and type(len) == "number" then
+                        arrayLength = len
+                    else
+                        return
+                    end
+
+                    -- Assuming the underlying array is 1-indexed, loop from 1 to length
+                    for i = 1, arrayLength do
+                        local success, elem = pcall(function()
+                            return array[i]
+                        end)
+                        if success and elem then
+                            local success, str = pcall(function()
+                                return elem:ToString()
+                            end)
+                            if success and str and str ~= "" then 
+                                table.insert(valueArray, str)
                             end
                         end
                     end
-                    
-                    print(string.format("[KCnfg] StringArray callback: Panel %s | Param %s | Values %d", 
-                        addr, name, #valueArray))
-                    print("[KCnfg] Final valueArray type:", type(valueArray))
-                    print("[KCnfg] Final valueArray contents:", table.concat(valueArray, ", "))
-                    
+
+                    print("[KCnfg] String array found:", table.concat(valueArray, ", "))
                     local panelCallbacks = mod_panel_callbacks[addr]
                     if panelCallbacks and panelCallbacks[name] then
                         panelCallbacks[name](valueArray)
-                    else
-                        print(string.format("[KCnfg] No string array callback for %s in panel %s", name, addr))
                     end
                 end)
-            
+
             print("[KCnfg] String array callback hook registered successfully")
             HookCreated.stringArray = true
             return true
-        end) then return true
+        end) then 
+            return true
         else
             print("[KCnfg] Failed to register string array callback hook")
             return false
@@ -567,8 +589,8 @@ end
 ---@return boolean, boolean
 function GetBoolParameter(modPanel, uniqueSaveLabel)
     if not modPanel or not modPanel:IsValid() then return false, false end
-    local ValueOut = { Value = false }
-    local FoundOut = { Value = false }
+    local Returns = {}
+    local EmptyTable = {}
     modPanel:GetBoolParameter(FName(uniqueSaveLabel), Returns, EmptyTable)
     return Returns.Output or false, Returns.Found or false
 end
