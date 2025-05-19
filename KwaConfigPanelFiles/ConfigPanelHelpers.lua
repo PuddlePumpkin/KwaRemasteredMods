@@ -61,9 +61,9 @@ end
 -- -------------------------------------------------------
 ---@param modPanel table The mod configuration panel
 ---@param labelText string Text to display in the section header
----@param style number|string|nil The style type (number 0-5 or string name)
----@param font number|string|nil The font to use (number 0-2 or string name)
----@param fontsize number the size of the font to use (default 25)
+---@param style? number|string The style type (number 0-5 or string name)
+---@param font? number|string The font to use (number 0-2 or string name)
+---@param fontsize? number the size of the font to use (default 25)
 function AddRowSectionHeader(modPanel, labelText, style, font, fontsize)
     if not modPanel or not modPanel:IsValid() then
         print("[KCnfg] Invalid mod panel")
@@ -82,9 +82,9 @@ end
 -- Separator
 -- -------------------------------------------------------
 ---@param modPanel table The mod configuration panel
----@param height number height of the separator (default: 16)
----@param showLine boolean enable to show the line (default: true)
-function AddRowSeparator(modPanel, height, showline)
+---@param height? number height of the separator (default: 16)
+---@param showLine? boolean enable to show the line (default: true)
+function AddRowSeparator(modPanel, height, showLine)
     if not modPanel or not modPanel:IsValid() then
         print("Invalid mod panel")
         return
@@ -92,7 +92,7 @@ function AddRowSeparator(modPanel, height, showline)
     print("[KCnfg] Adding Separator")
     
     local ReturnValue = {}
-    modPanel:AddRowSeparator(height or 16, showline or true, ReturnValue)
+    modPanel:AddRowSeparator(height or 16, showLine or true, ReturnValue)
 end
 
 -- -------------------------------------------------------
@@ -101,13 +101,13 @@ end
 ---@param modPanel table The mod configuration panel
 ---@param label string Label text for the slider
 ---@param uniqueSaveLabel string Unique identifier for saving the value
----@param minValue number|nil Minimum value (default: 0)
----@param maxValue number|nil Maximum value (default: 1)
----@param defaultValue number|nil Default value (default: minValue)
----@param numberSuffix string|nil Suffix to display after the number (default: "")
----@param decimalCount number|nil Number of decimal places (default: 0)
----@param snapSlider boolean|nil Whether to snap to increments (default: false)
----@param snapSize number|nil Size of snap increments (default: 1)
+---@param minValue? number Minimum value (default: 0)
+---@param maxValue? number Maximum value (default: 1)
+---@param defaultValue? number Default value (default: minValue)
+---@param numberSuffix? string Suffix to display after the number (default: "")
+---@param decimalCount? number Number of decimal places (default: 0)
+---@param snapSlider? boolean Whether to snap to increments (default: false)
+---@param snapSize? number Size of snap increments (default: 1)
 function AddRowSlider(modPanel, label, uniqueSaveLabel, minValue, maxValue, defaultValue, numberSuffix, decimalCount, snapSlider, snapSize)
     if not modPanel then 
         print("[KCnfg] AddRowSlider: modPanel is nil")
@@ -140,7 +140,9 @@ end
 ---@param modPanel table The mod configuration panel
 function LoadParameters(modPanel)
     if not modPanel then return end
-    modPanel:LoadParameters()
+    ExecuteInGameThread(function()
+        modPanel:LoadParameters()
+    end)
 end
 
 -- -------------------------------------------------------
@@ -383,8 +385,8 @@ local bPanelRegistered = false
 local RegisteredPanel = nil
 
 ---@param modName string The name of your mod
----@param doHandleSaves boolean|nil Whether to handle saves (default: true)
----@param onlyHandleSaves boolean|nil Whether to only handle saves, no config panel (default: false)
+---@param doHandleSaves? boolean Whether to handle saves (default: true)
+---@param onlyHandleSaves? boolean Whether to only handle saves, no config panel (default: false)
 ---@return table|nil panel The configuration panel, or nil if not ready yet
 function RegisterMod(modName, doHandleSaves, onlyHandleSaves)
     if not modName then

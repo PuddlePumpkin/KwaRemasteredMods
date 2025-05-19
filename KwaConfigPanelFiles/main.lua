@@ -1,23 +1,23 @@
 require("ConfigPanelHelpers")
 
-
---[[
 -- Try to register and set up the panel
+local ModPanel = nil
 LoopAsync(3000, function()
-    -- Register the mod
-    local ModPanel = RegisterMod("LuaTestMod", true, false)
+    if ModPanel then return true end
+    
+    ModPanel = RegisterMod("LuaTestMod", true, false)
     if not ModPanel then
         print("Panel not ready yet, retrying...")
         return false
     end
-
-    print("Panel ready, adding rows")
     
+    print("Panel ready, adding rows")
+
     -- Add rows to the mod panel
     AddRowSectionHeader(ModPanel, "TEST LABEL")
     AddRowSeparator(ModPanel)
     AddRowSlider(ModPanel, "Slider", "SliderSave1", 0, 100, 1)
-    AddRowSeparator(ModPanel,40,"True")
+    AddRowSeparator(ModPanel, 40, true)
     -- Register slider callback
     RegisterCallback(ModPanel, "SliderSave1", function(value)
         print("Successfully heard callback:", value)
@@ -34,8 +34,6 @@ LoopAsync(3000, function()
         print("After delay: Value:", value, "Found:", found)
     end)
 
-    
     print("Panel setup complete")
     return true
 end)
-]]--

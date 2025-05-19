@@ -12,7 +12,8 @@
     },
     "type": {
         "weakNilCheck": true,
-        "weakUnionCheck": true
+        "weakUnionCheck": true,
+        "weakParamCheck": true
     },
     "Lua": {
     }
