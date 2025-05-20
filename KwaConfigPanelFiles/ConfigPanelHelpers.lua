@@ -117,12 +117,8 @@ end
 ---@param snapSlider? boolean Whether to snap to increments (default: false)
 ---@param snapSize? number Size of snap increments (default: 1)
 function AddRowSlider(modPanel, label, uniqueIdentifier, minValue, maxValue, defaultValue, numberSuffix, decimalCount, snapSlider, snapSize)
-    if not modPanel then 
-        --print("[KCnfg] AddRowSlider: modPanel is nil")
-        return 
-    end
-    if not modPanel:IsValid() then
-        --print("[KCnfg] AddRowSlider: modPanel is not valid")
+    if not modPanel or not modPanel:IsValid() then
+        print("[KCnfg] AddRowSlider: modPanel is nil or invalid")
         return
     end
     --print("[KCnfg] Adding slider:", label, "with id:", uniqueIdentifier)
@@ -141,6 +137,30 @@ function AddRowSlider(modPanel, label, uniqueIdentifier, minValue, maxValue, def
     )
     SetupFloatCallbackHook()
     --print("[KCnfg] Slider added")
+end
+
+-- -------------------------------------------------------
+-- Bool Switch
+-- -------------------------------------------------------
+---@param modPanel table The mod configuration panel
+---@param label string Label text for the bool switch
+---@param uniqueIdentifier string Unique identifier for saving the value
+---@param defaultValue? boolean Default value (default: false)
+function AddRowBoolSwitch(modPanel, label, uniqueIdentifier, defaultValue)
+    if not modPanel or not modPanel:IsValid() then
+        print("[KCnfg] AddRowBoolSwitch: modPanel is nil or invalid")
+        return
+    end
+    print("[KCnfg] Adding bool switch:", label, "with id:", uniqueIdentifier)
+    local ReturnValue = {}
+    modPanel:AddRowBoolSwitch(
+        FText(label),
+        FName(uniqueIdentifier),
+        defaultValue or false,
+        ReturnValue
+    )
+    SetupBoolCallbackHook()
+    print("[KCnfg] Bool switch added")
 end
 
 -- -------------------------------------------------------
@@ -224,7 +244,7 @@ function SetupFloatCallbackHook()
     end)
 end
 
-local function SetupIntCallbackHook()
+function SetupIntCallbackHook()
     -- Int hook
     LoopAsync(3000, function()
         if HookCreated.int then return true end
@@ -263,7 +283,7 @@ local function SetupIntCallbackHook()
     end)
 end
 
-local function SetupBoolCallbackHook()
+function SetupBoolCallbackHook()
     -- Bool hook
     LoopAsync(3000, function()
         if HookCreated.bool then return true end
@@ -302,7 +322,7 @@ local function SetupBoolCallbackHook()
     end)
 end
 
-local function SetupStringCallbackHook()
+function SetupStringCallbackHook()
     -- String hook
     LoopAsync(3000, function()
         if HookCreated.string then return true end
@@ -341,7 +361,7 @@ local function SetupStringCallbackHook()
     end)
 end
 
-local function SetupStringArrayCallbackHook()
+function SetupStringArrayCallbackHook()
     -- String Array hook
     LoopAsync(3000, function()        
         if HookCreated.stringArray then return true end

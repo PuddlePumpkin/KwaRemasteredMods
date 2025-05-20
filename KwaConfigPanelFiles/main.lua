@@ -19,11 +19,16 @@ LoopAsync(3000, function()
     -- Add rows to the mod panel
     AddRowSectionHeader(ModPanel, "TEST LABEL")
     AddRowSeparator(ModPanel)
-    AddRowSlider(ModPanel, "Slider", "SliderSave1", 0, 100, 1)
+    AddRowSlider(ModPanel, "Slider", "SliderExampleID", 0, 100, 1)
     AddRowSeparator(ModPanel, 40, true)
+    AddRowBoolSwitch(ModPanel, "ExampleBoolSwitch", "BoolSwitchExampleID", true)
 
-    -- Register slider callback, This is called on change, as well as after loading parameters!
-    RegisterCallback(ModPanel, "SliderSave1", function(value)
+    -- Register callbacks, These are called on change, as well as after loading parameters!
+    RegisterCallback(ModPanel, "SliderExampleID", function(value)
+        print("Successfully heard callback:", value)
+    end)
+
+    RegisterCallback(ModPanel, "BoolSwitchExampleID", function(value)
         print("Successfully heard callback:", value)
     end)
 
