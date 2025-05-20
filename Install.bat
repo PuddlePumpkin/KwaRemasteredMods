@@ -28,6 +28,9 @@ set "RELEASE_DIR_LUA=%~dp0\Release\KwaNotificationsRelease\OblivionRemastered\Bi
 set "DEST_DIR_LUA2=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\Binaries\Win64\ue4ss\mods\KwaConfigPanelLua\Scripts"
 set "RELEASE_DIR_LUA2=%~dp0\Release\KwaConfigPanelRelease\OblivionRemastered\Binaries\Win64\ue4ss\mods\KwaConfigPanelLua\Scripts"
 
+set "DEST_DIR_LUA3=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\Binaries\Win64\ue4ss\mods\shared\KwaHelpers"
+set "RELEASE_DIR_LUA3=%~dp0\Release\KwaConfigPanelRelease\OblivionRemastered\Binaries\Win64\ue4ss\mods\shared\KwaHelpers"
+
 :: Copy to dest dir
 if not exist "%DEST_DIR%\%RENAME%" (
     mkdir "%DEST_DIR%\%RENAME%"
@@ -65,11 +68,17 @@ if not exist "%DEST_DIR_LUA%" (
 if not exist "%DEST_DIR_LUA2%" (
     mkdir "%DEST_DIR_LUA2%"
 )
+if not exist "%DEST_DIR_LUA3%" (
+    mkdir "%DEST_DIR_LUA3%"
+)
 if not exist "%RELEASE_DIR_LUA%" (
     mkdir "%RELEASE_DIR_LUA%"
 )
 if not exist "%RELEASE_DIR_LUA2%" (
     mkdir "%RELEASE_DIR_LUA2%"
+)
+if not exist "%RELEASE_DIR_LUA3%" (
+    mkdir "%RELEASE_DIR_LUA3%"
 )
 
 :: Copy File
@@ -77,8 +86,8 @@ copy "%SOURCE_DIR_LUA%\%LUA_NAME%" "%DEST_DIR_LUA%"
 copy "%SOURCE_DIR_LUA%\%LUA_NAME%" "%RELEASE_DIR_LUA%"
 copy "%SOURCE_DIR_LUA2%\%LUA_NAME%" "%DEST_DIR_LUA2%"
 copy "%SOURCE_DIR_LUA2%\%LUA_NAME%" "%RELEASE_DIR_LUA2%"
-copy "%SOURCE_DIR_LUA2%\%LUA_NAME2%" "%DEST_DIR_LUA2%"
-copy "%SOURCE_DIR_LUA2%\%LUA_NAME2%" "%RELEASE_DIR_LUA2%"
+copy "%SOURCE_DIR_LUA2%\%LUA_NAME2%" "%DEST_DIR_LUA3%"
+copy "%SOURCE_DIR_LUA2%\%LUA_NAME2%" "%RELEASE_DIR_LUA3%"
 echo Files Copied!
 
 

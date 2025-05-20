@@ -1,10 +1,9 @@
-require("ConfigPanelHelpers")
+require("KwaHelpers.ConfigPanelHelpers")
 
 -- Try to register and set up the panel
 local ModPanel = nil
 LoopAsync(3000, function()
     if ModPanel then return true end
-    
     ModPanel = RegisterMod("LuaTestMod", true, false)
     if not ModPanel then
         print("Panel not ready yet, retrying...")
