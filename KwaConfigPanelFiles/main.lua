@@ -23,32 +23,21 @@ LoopAsync(3000, function()
     end)
     -- Load parameters after setup is done
     LoadParameters(ModPanel)
-    ExecuteWithDelay(3000, function()
-        SetStringParameter(ModPanel,"testparam", "teststring")
-        print("String Set")
-    end)
-
-    ExecuteWithDelay(5000, function()
-        local value, found = GetStringParameter(ModPanel, "testparam")
-        print("After delay: Value:", value, "Found:", found)
-    end)
-
-    -- Add test calls for string array parameter
-    ExecuteWithDelay(7000, function()
-        local testArray = {"alpha", "beta", "delta"}
-        SetStringArrayParameter(ModPanel, "TestStringArrayParam", testArray)
-        print("Set string array parameter 'TestStringArrayParam' to", table.concat(testArray, ", "))
-    end)
-
-    ExecuteWithDelay(9000, function()
-        local retrievedArray, found = GetStringArrayParameter(ModPanel, "TestStringArrayParam")
-        if found then
-            print("Retrieved string array 'TestStringArrayParam':", table.concat(retrievedArray, ", "))
-        else
-            print("Failed to retrieve string array 'TestStringArrayParam'.")
-        end
-    end)
-
     print("Panel setup complete")
+    
+    -- String Parameter Example
+    SetStringParameter(ModPanel,"ExampleStringParam", "Example string here")
+
+    local value, found = GetStringParameter(ModPanel, "ExampleStringParam")
+    print("ExampleStringParam: ", value, "Found:", found)
+
+    -- String Array Parameter Example
+    local ExampleArray = {"Alpha", "Beta", "Gamma"}
+    SetStringArrayParameter(ModPanel, "ExampleStringArrayParam", ExampleArray)
+    print("Set to: ", table.concat(ExampleArray, ", "))
+
+    local retrievedArray, found = GetStringArrayParameter(ModPanel, "ExampleStringArrayParam")
+    print("Output array: ", table.concat(retrievedArray, ", ") , "Found:", found)
+
     return true
 end)

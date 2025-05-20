@@ -149,39 +149,9 @@ end
 ---@param modPanel table The mod configuration panel
 function LoadParameters(modPanel)
     if not modPanel then return end
-    
-    -- Check if all callbacks are registered
-    local allRegistered = true
-    for _, registered in pairs(HookCreated) do
-        if not registered then
-            allRegistered = false
-            break
-        end
-    end
-    
-    if not allRegistered then
-        --print("[KCnfg] Waiting for callbacks to be registered before loading parameters...")
-        LoopAsync(1000, function()
-            local allReady = true
-            for _, registered in pairs(HookCreated) do
-                if not registered then
-                    allReady = false
-                    break
-                end
-            end
-            if allReady then
-                ExecuteInGameThread(function()
-                    modPanel:LoadParameters()
-                end)
-                return true
-            end
-            return false
-        end)
-    else
-        ExecuteInGameThread(function()
-            modPanel:LoadParameters()
-        end)
-    end
+    ExecuteInGameThread(function()
+        modPanel:LoadParameters()
+    end)
 end
 
 -- -------------------------------------------------------
@@ -540,11 +510,7 @@ end
 ---@param uniqueIdentifier string The unique identifier for the parameter
 ---@param value string
 function SetStringParameter(modPanel, uniqueIdentifier, value)
-    if not modPanel or not modPanel:IsValid() then
-        print("INVALID MOD PANEL")
-        return
-    end
-    print("SETTING STRING PARAM")
+    if not modPanel or not modPanel:IsValid() then return end
     modPanel:SetStringParameter(FName(uniqueIdentifier), FString(value))
 end
 
@@ -553,10 +519,15 @@ end
 ---@param value string[]
 function SetStringArrayParameter(modPanel, uniqueIdentifier, value)
     if not modPanel or not modPanel:IsValid() then return end
+    -- Create a copy of the input array
+    local valueCopy = {}
+    for i, str in ipairs(value) do
+        valueCopy[i] = str
+    end
     -- Convert the Lua table of strings to a table of FString objects for the Blueprint TArray<FString>
     local param = {}
-    for i, str in ipairs(value) do param[i] = FString(str) end
-    modPanel:SetStringArrayParameter(FName(uniqueIdentifier), value)
+    for i, str in ipairs(valueCopy) do param[i] = FString(str) end
+    modPanel:SetStringArrayParameter(FName(uniqueIdentifier), valueCopy)
 end
 
 ---@param modPanel table The mod configuration panel
@@ -607,12 +578,9 @@ end
 ---@return string, boolean
 function GetStringParameter(modPanel, uniqueIdentifier)
     if not modPanel or not modPanel:IsValid() then return "", false end
-    print("GETTING STRING PARAM")
     local Returns = {}
     local EmptyTable = {}
     modPanel:GetStringParameter(FName(uniqueIdentifier), Returns, EmptyTable)
-    print("Found?:")
-    print(Returns.Found)
     return Returns.Output:ToString() or "", Returns.Found or false
 end
 
