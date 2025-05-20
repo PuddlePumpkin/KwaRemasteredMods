@@ -24,12 +24,12 @@ LoopAsync(3000, function()
     -- Load parameters after setup is done
     LoadParameters(ModPanel)
     ExecuteWithDelay(3000, function()
-        SetStringParameter(ModPanel,"testid", "testid")
+        SetStringParameter(ModPanel,"testparam", "teststring")
         print("String Set")
     end)
 
     ExecuteWithDelay(5000, function()
-        local value, found = GetStringParameter(ModPanel, "testid")
+        local value, found = GetStringParameter(ModPanel, "testparam")
         print("After delay: Value:", value, "Found:", found)
     end)
 
@@ -37,7 +37,7 @@ LoopAsync(3000, function()
     ExecuteWithDelay(7000, function()
         local testArray = {"alpha", "beta", "delta"}
         SetStringArrayParameter(ModPanel, "TestStringArrayParam", testArray)
-        --print("Set string array parameter 'TestStringArrayParam' to", table.concat(testArray, ", "))
+        print("Set string array parameter 'TestStringArrayParam' to", table.concat(testArray, ", "))
     end)
 
     ExecuteWithDelay(9000, function()

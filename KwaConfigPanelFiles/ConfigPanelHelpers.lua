@@ -139,6 +139,7 @@ function AddRowSlider(modPanel, label, uniqueIdentifier, minValue, maxValue, def
         snapSize or 1,
         ReturnValue
     )
+    SetupFloatCallbackHook()
     --print("[KCnfg] Slider added")
 end
 
@@ -211,7 +212,7 @@ function RegisterCallback(modPanel, saveId, callback)
     mod_panel_callbacks[addr][saveId] = callback
 end
 
-local function SetupCallbacks()
+function SetupFloatCallbackHook()
     -- Float hook
     LoopAsync(3000, function()
         if HookCreated.float then return true end
@@ -251,6 +252,9 @@ local function SetupCallbacks()
             return false
         end
     end)
+end
+
+local function SetupIntCallbackHook()
     -- Int hook
     LoopAsync(3000, function()
         if HookCreated.int then return true end
@@ -287,7 +291,9 @@ local function SetupCallbacks()
             return false
         end
     end)
+end
 
+local function SetupBoolCallbackHook()
     -- Bool hook
     LoopAsync(3000, function()
         if HookCreated.bool then return true end
@@ -324,7 +330,9 @@ local function SetupCallbacks()
             return false
         end
     end)
+end
 
+local function SetupStringCallbackHook()
     -- String hook
     LoopAsync(3000, function()
         if HookCreated.string then return true end
@@ -361,9 +369,11 @@ local function SetupCallbacks()
             return false
         end
     end)
+end
 
+local function SetupStringArrayCallbackHook()
     -- String Array hook
-    LoopAsync(3000, function()
+    LoopAsync(3000, function()        
         if HookCreated.stringArray then return true end
         if pcall(function()
             --print("[KCnfg] Registering string array callback hook")
@@ -494,7 +504,6 @@ function RegisterMod(modName, doHandleSaves, onlyHandleSaves)
         end
         
         -- Only set up callbacks if we successfully registered
-        SetupCallbacks()
         print("[KCnfg]["..modName.."] Callback setup complete")
 
         RegisteredPanel = ReturnValue.YourPanel
@@ -531,7 +540,11 @@ end
 ---@param uniqueIdentifier string The unique identifier for the parameter
 ---@param value string
 function SetStringParameter(modPanel, uniqueIdentifier, value)
-    if not modPanel or not modPanel:IsValid() then return end
+    if not modPanel or not modPanel:IsValid() then
+        print("INVALID MOD PANEL")
+        return
+    end
+    print("SETTING STRING PARAM")
     modPanel:SetStringParameter(FName(uniqueIdentifier), FString(value))
 end
 
@@ -594,9 +607,12 @@ end
 ---@return string, boolean
 function GetStringParameter(modPanel, uniqueIdentifier)
     if not modPanel or not modPanel:IsValid() then return "", false end
+    print("GETTING STRING PARAM")
     local Returns = {}
     local EmptyTable = {}
     modPanel:GetStringParameter(FName(uniqueIdentifier), Returns, EmptyTable)
+    print("Found?:")
+    print(Returns.Found)
     return Returns.Output:ToString() or "", Returns.Found or false
 end
 
