@@ -34,6 +34,22 @@ LoopAsync(3000, function()
         print("After delay: Value:", value, "Found:", found)
     end)
 
+    -- Add test calls for string array parameter
+    ExecuteWithDelay(7000, function()
+        local testArray = {"alpha", "beta", "delta"}
+        SetStringArrayParameter(ModPanel, "TestStringArrayParam", testArray)
+        --print("Set string array parameter 'TestStringArrayParam' to", table.concat(testArray, ", "))
+    end)
+
+    ExecuteWithDelay(9000, function()
+        local retrievedArray, found = GetStringArrayParameter(ModPanel, "TestStringArrayParam")
+        if found then
+            print("Retrieved string array 'TestStringArrayParam':", table.concat(retrievedArray, ", "))
+        else
+            print("Failed to retrieve string array 'TestStringArrayParam'.")
+        end
+    end)
+
     print("Panel setup complete")
     return true
 end)

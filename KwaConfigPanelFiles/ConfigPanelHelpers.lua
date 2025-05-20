@@ -108,7 +108,7 @@ end
 -- -------------------------------------------------------
 ---@param modPanel table The mod configuration panel
 ---@param label string Label text for the slider
----@param uniqueSaveLabel string Unique identifier for saving the value
+---@param uniqueIdentifier string Unique identifier for saving the value
 ---@param minValue? number Minimum value (default: 0)
 ---@param maxValue? number Maximum value (default: 1)
 ---@param defaultValue? number Default value (default: minValue)
@@ -116,7 +116,7 @@ end
 ---@param decimalCount? number Number of decimal places (default: 0)
 ---@param snapSlider? boolean Whether to snap to increments (default: false)
 ---@param snapSize? number Size of snap increments (default: 1)
-function AddRowSlider(modPanel, label, uniqueSaveLabel, minValue, maxValue, defaultValue, numberSuffix, decimalCount, snapSlider, snapSize)
+function AddRowSlider(modPanel, label, uniqueIdentifier, minValue, maxValue, defaultValue, numberSuffix, decimalCount, snapSlider, snapSize)
     if not modPanel then 
         print("[KCnfg] AddRowSlider: modPanel is nil")
         return 
@@ -125,11 +125,11 @@ function AddRowSlider(modPanel, label, uniqueSaveLabel, minValue, maxValue, defa
         print("[KCnfg] AddRowSlider: modPanel is not valid")
         return
     end
-    print("[KCnfg] Adding slider:", label, "with id:", uniqueSaveLabel)
+    print("[KCnfg] Adding slider:", label, "with id:", uniqueIdentifier)
     local ReturnValue = {}
     modPanel:AddRowSlider(
         FText(label),
-        FName(uniqueSaveLabel),
+        FName(uniqueIdentifier),
         minValue or 0,
         maxValue or 1,
         defaultValue or (minValue or 0),
@@ -378,55 +378,50 @@ local function SetupCallbacks()
                     local addr = panelInstance:GetAddress()
                     local name = ParameterName:get():ToString()
 
-                    local struct = ParameterValue:get()
-                    if not struct then
-                        return
-                    end
+                    -- Assuming ParameterValue is now directly the TArray<string>
+                    local array = ParameterValue:get() -- Get the underlying TArray object
 
-                    local array = nil
-                    local success, result = pcall(function()
-                        return struct.Array_5_58F9AD1C48F5AF71237BB784D1D50023
-                    end)
-                    if success and result then
-                        array = result
-                    end
-
-                    if not array then
+                    if not array or (type(array) == "userdata" and not array.GetArrayNum) then
+                        print("[KCnfg] String array callback: ParameterValue is not a valid TArray.")
                         return
                     end
 
                     local valueArray = {}
                     
-                    local arrayLength = nil
-                    local successLength, len = pcall(function()
-                        return #array
-                    end)
+                    local arrayLength = array:GetArrayNum()
                     
-                    if successLength and type(len) == "number" then
-                        arrayLength = len
-                    else
-                        return
-                    end
-
-                    -- Assuming the underlying array is 1-indexed, loop from 1 to length
-                    for i = 1, arrayLength do
-                        local success, elem = pcall(function()
-                            return array[i]
-                        end)
-                        if success and elem then
-                            local success, str = pcall(function()
-                                return elem:ToString()
+                    if arrayLength > 0 then
+                        print("[KCnfg] String array found with length:", arrayLength)
+                        -- Assuming the underlying array is 1-indexed in this context
+                        for i = 1, arrayLength do
+                            print(string.format("[KCnfg][DEBUG] Accessing element at index %d", i))
+                            local success, elem = pcall(function()
+                                return array[i]
                             end)
-                            if success and str and str ~= "" then 
-                                table.insert(valueArray, str)
+                            if success and elem then
+                                print(string.format("[KCnfg][DEBUG] Successfully got element at index %d, type: %s", i, type(elem)))
+                                local success, str = pcall(function()
+                                    return elem:ToString()
+                                end)
+                                if success then
+                                     print(string.format("[KCnfg][DEBUG] Converted element %d to string: '%s' (empty: %s)", i, str, str == ""))
+                                    -- Removed the str ~= "" check to see if elements are truly empty
+                                    table.insert(valueArray, str)
+                                else
+                                    print(string.format("[KCnfg][DEBUG] Failed to convert element %d to string", i))
+                                end
+                            else
+                                print(string.format("[KCnfg][DEBUG] Failed to get element at index %d", i))
                             end
                         end
                     end
 
-                    print("[KCnfg] String array found:", table.concat(valueArray, ", "))
+                    print("[KCnfg] String array found:", table.concat(valueArray, ", ")) -- Uncomment for verbose logging
                     local panelCallbacks = mod_panel_callbacks[addr]
                     if panelCallbacks and panelCallbacks[name] then
                         panelCallbacks[name](valueArray)
+                    else
+                         print(string.format("[KCnfg] No string array callback for %s in panel %s", name, addr))
                     end
                 end)
 
@@ -517,104 +512,143 @@ end
 FString = FString or function(str) return str end
 
 ---@param modPanel table The mod configuration panel
----@param uniqueSaveLabel string The unique identifier for the parameter
+---@param uniqueIdentifier string The unique identifier for the parameter
 ---@param value integer
-function SetIntParameter(modPanel, uniqueSaveLabel, value)
+function SetIntParameter(modPanel, uniqueIdentifier, value)
     if not modPanel or not modPanel:IsValid() then return end
-    modPanel:SetIntParameter(FName(uniqueSaveLabel), math.floor(value))
+    modPanel:SetIntParameter(FName(uniqueIdentifier), math.floor(value))
 end
 
 ---@param modPanel table The mod configuration panel
----@param uniqueSaveLabel string The unique identifier for the parameter
+---@param uniqueIdentifier string The unique identifier for the parameter
 ---@param value number
-function SetFloatParameter(modPanel, uniqueSaveLabel, value)
+function SetFloatParameter(modPanel, uniqueIdentifier, value)
     if not modPanel or not modPanel:IsValid() then return end
-    modPanel:SetFloatParameter(FName(uniqueSaveLabel), value)
+    modPanel:SetFloatParameter(FName(uniqueIdentifier), value)
 end
 
 ---@param modPanel table The mod configuration panel
----@param uniqueSaveLabel string The unique identifier for the parameter
+---@param uniqueIdentifier string The unique identifier for the parameter
 ---@param value string
-function SetStringParameter(modPanel, uniqueSaveLabel, value)
+function SetStringParameter(modPanel, uniqueIdentifier, value)
     if not modPanel or not modPanel:IsValid() then return end
-    modPanel:SetStringParameter(FName(uniqueSaveLabel), FString(value))
+    modPanel:SetStringParameter(FName(uniqueIdentifier), FString(value))
 end
 
 ---@param modPanel table The mod configuration panel
----@param uniqueSaveLabel string The unique identifier for the parameter
+---@param uniqueIdentifier string The unique identifier for the parameter
 ---@param value string[]
-function SetStringArrayParameter(modPanel, uniqueSaveLabel, value)
+function SetStringArrayParameter(modPanel, uniqueIdentifier, value)
     if not modPanel or not modPanel:IsValid() then return end
-    local param = { Array = {} }
-    for _, str in ipairs(value) do
-        param.Array:Add(FString(str))
-    end
-    modPanel:SetStringArrayParameter(FName(uniqueSaveLabel), param)
+    -- Convert the Lua table of strings to a table of FString objects for the Blueprint TArray<FString>
+    local param = {}
+    for i, str in ipairs(value) do param[i] = FString(str) end
+    modPanel:SetStringArrayParameter(FName(uniqueIdentifier), value)
 end
 
 ---@param modPanel table The mod configuration panel
----@param uniqueSaveLabel string The unique identifier for the parameter
+---@param uniqueIdentifier string The unique identifier for the parameter
 ---@param value boolean
-function SetBoolParameter(modPanel, uniqueSaveLabel, value)
+function SetBoolParameter(modPanel, uniqueIdentifier, value)
     if not modPanel or not modPanel:IsValid() then return end
-    modPanel:SetBoolParameter(FName(uniqueSaveLabel), value and true or false)
+    modPanel:SetBoolParameter(FName(uniqueIdentifier), value and true or false)
 end
 -- -------------------------------------------------------
 -- Getters
 -- -------------------------------------------------------
 ---@param modPanel table The mod configuration panel
----@param uniqueSaveLabel string The unique identifier for the parameter
+---@param uniqueIdentifier string The unique identifier for the parameter
 ---@return integer, boolean
-function GetIntParameter(modPanel, uniqueSaveLabel)
+function GetIntParameter(modPanel, uniqueIdentifier)
     if not modPanel or not modPanel:IsValid() then return 0, false end
     local Returns = {}
     local EmptyTable = {}
-    modPanel:GetIntParameter(FName(uniqueSaveLabel), Returns, EmptyTable)
+    modPanel:GetIntParameter(FName(uniqueIdentifier), Returns, EmptyTable)
     return Returns.Output or 0, Returns.Found or false
 end
 
 ---@param modPanel table The mod configuration panel
----@param uniqueSaveLabel string The unique identifier for the parameter
+---@param uniqueIdentifier string The unique identifier for the parameter
 ---@return number, boolean
-function GetFloatParameter(modPanel, uniqueSaveLabel)
+function GetFloatParameter(modPanel, uniqueIdentifier)
     if not modPanel or not modPanel:IsValid() then return 0.0, false end
     local Returns = {}
     local EmptyTable = {}
-    modPanel:GetFloatParameter(FName(uniqueSaveLabel), Returns, EmptyTable)
+    modPanel:GetFloatParameter(FName(uniqueIdentifier), Returns, EmptyTable)
     return Returns.Output or 0.0, Returns.Found or false
 end
 
 ---@param modPanel table The mod configuration panel
----@param uniqueSaveLabel string The unique identifier for the parameter
+---@param uniqueIdentifier string The unique identifier for the parameter
 ---@return boolean, boolean
-function GetBoolParameter(modPanel, uniqueSaveLabel)
+function GetBoolParameter(modPanel, uniqueIdentifier)
     if not modPanel or not modPanel:IsValid() then return false, false end
     local Returns = {}
     local EmptyTable = {}
-    modPanel:GetBoolParameter(FName(uniqueSaveLabel), Returns, EmptyTable)
+    modPanel:GetBoolParameter(FName(uniqueIdentifier), Returns, EmptyTable)
     return Returns.Output or false, Returns.Found or false
 end
 
 ---@param modPanel table The mod configuration panel
----@param uniqueSaveLabel string The unique identifier for the parameter
+---@param uniqueIdentifier string The unique identifier for the parameter
 ---@return string, boolean
-function GetStringParameter(modPanel, uniqueSaveLabel)
+function GetStringParameter(modPanel, uniqueIdentifier)
     if not modPanel or not modPanel:IsValid() then return "", false end
     local Returns = {}
     local EmptyTable = {}
-    modPanel:GetStringParameter(FName(uniqueSaveLabel), Returns, EmptyTable)
+    modPanel:GetStringParameter(FName(uniqueIdentifier), Returns, EmptyTable)
     return Returns.Output:ToString() or "", Returns.Found or false
 end
 
 ---@param modPanel table The mod configuration panel
----@param uniqueSaveLabel string The unique identifier for the parameter
+---@param uniqueIdentifier string The unique identifier for the parameter
 ---@return table, boolean
-function GetStringArrayParameter(modPanel, uniqueSaveLabel)
+function GetStringArrayParameter(modPanel, uniqueIdentifier)
     if not modPanel or not modPanel:IsValid() then return {}, false end
     local Returns = {}
-    local EmptyTable = {}
-    modPanel:GetStringArrayParameter(FName(uniqueSaveLabel), Returns, EmptyTable)
-    return Returns.Output.Array or {}, Returns.Found or false
+    local OutputParam = {}
+    -- Call the Blueprint function, expecting array elements in 'Returns' and 'Found' in 'OutputParam'
+    modPanel:GetStringArrayParameter(FName(uniqueIdentifier), Returns, OutputParam)
+    
+    local arrayData = {}
+    local found = OutputParam.Found or false
+
+    if found then
+        -- Iterate through the array elements found in the Returns table using 1-based indexing
+        local i = 1
+        while Returns[i] ~= nil do
+            local successElem, elemWrapper = pcall(function()
+                return Returns[i]
+            end)
+            if successElem and elemWrapper and type(elemWrapper) == "userdata" then
+                -- Element is a RemoteUnrealParam, get the actual value
+                local successGet, elem = pcall(function()
+                    return elemWrapper:get()
+                end)
+
+                if successGet and elem then
+                    -- Assuming the underlying element is FString and needs ToString()
+                    local successStr, str = pcall(function()
+                        if type(elem) == "userdata" and elem.ToString then
+                            return elem:ToString()
+                        else
+                            -- If not a userdata with ToString, treat as is
+                            return tostring(elem)
+                        end
+                    end)
+                    if successStr then
+                        table.insert(arrayData, str)
+                    end
+                end
+            else
+                -- Stop iterating if we encounter a nil or non-userdata element wrapper
+                break
+            end
+            i = i + 1
+        end
+    end
+
+    return arrayData, found
 end
 
 

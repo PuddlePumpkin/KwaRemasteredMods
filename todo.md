@@ -4,25 +4,13 @@
 
 ## Config Panel:
 ### Blueprint:
-remake oblivion button prefab
 
 ### Lua:
-add parameter set get functions
-fix up changed parameters
 add new rows
-
 ---
 
 ## Notifications:
-Move notification to hook
-Add bool param option to disable save notificaitons
-Add switch option for blacklist types
-
-
-
-
-
-
+test encumbered -> equip before reflash
 
 
 
