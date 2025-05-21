@@ -166,6 +166,91 @@ function AddRowBoolSwitch(modPanel, label, uniqueIdentifier, defaultValue)
 end
 
 -- -------------------------------------------------------
+-- Switch Box
+-- -------------------------------------------------------
+---@param modPanel table The mod configuration panel
+---@param label string Label text for the switch box
+---@param uniqueIdentifier string Unique identifier for saving the value
+---@param defaultValue? integer Default selected index (default: 0)
+---@param options string[] A list of strings for the options
+function AddRowSwitchBox(modPanel, label, uniqueIdentifier, defaultValue, options)
+    if not modPanel or not modPanel:IsValid() then
+        print("[KCnfg] AddRowSwitchBox: modPanel is nil or invalid")
+        return
+    end
+    print("[KCnfg] Adding switch box:", label, "with id:", uniqueIdentifier)
+
+    -- Convert Lua table of strings to table of FText objects for options
+    local optionsFText = {}
+    if options then
+        for i, str in ipairs(options) do
+            optionsFText[i] = FText(str)
+        end
+    end
+
+    local ReturnValue = {}
+    modPanel:AddRowSwitchBox(
+        FText(label),
+        FName(uniqueIdentifier),
+        defaultValue or 0,
+        optionsFText,
+        ReturnValue
+    )
+    SetupIntCallbackHook() -- It's an integer type parameter
+    print("[KCnfg] Switch box added")
+end
+
+-- -------------------------------------------------------
+-- String List
+-- -------------------------------------------------------
+---@param modPanel table The mod configuration panel
+---@param label string Label text for the string list
+---@param uniqueIdentifier string Unique identifier for saving the value
+function AddRowStringList(modPanel, label, uniqueIdentifier)
+    if not modPanel or not modPanel:IsValid() then
+        print("[KCnfg] AddRowStringList: modPanel is nil or invalid")
+        return
+    end
+    print("[KCnfg] Adding string list:", label, "with id:", uniqueIdentifier)
+
+    local ReturnValue = {}
+    modPanel:AddRowStringList(
+        FText(label),
+        FName(uniqueIdentifier),
+        ReturnValue
+    )
+    SetupStringArrayCallbackHook() -- It's a string array type parameter
+    print("[KCnfg] String list added")
+end
+
+-- -------------------------------------------------------
+-- Buttons Row
+-- -------------------------------------------------------
+---@param modPanel table The mod configuration panel
+---@param buttonOneLabel string Text for the first button
+---@param buttonTwoLabel string Text for the second button
+---@param uniqueIdentifier string Unique identifier for the row
+---@param showSecondButton? boolean Whether to show the second button (default: true)
+function AddRowButtons(modPanel, buttonOneLabel, buttonTwoLabel, uniqueIdentifier, showSecondButton)
+    if not modPanel or not modPanel:IsValid() then
+        print("[KCnfg] AddRowButtons: modPanel is nil or invalid")
+        return
+    end
+    print("[KCnfg] Adding buttons row:", uniqueIdentifier)
+
+    local ReturnValue = {}
+    modPanel:AddRowButtons(
+        FText(buttonOneLabel),
+        FText(buttonTwoLabel),
+        FName(uniqueIdentifier),
+        showSecondButton or true,
+        ReturnValue
+    )
+    SetupIntCallbackHook()
+    print("[KCnfg] Buttons row added")
+end
+
+-- -------------------------------------------------------
 -- Load Params
 -- -------------------------------------------------------
 ---@param modPanel table The mod configuration panel

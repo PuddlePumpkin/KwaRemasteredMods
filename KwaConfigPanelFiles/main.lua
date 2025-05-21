@@ -14,23 +14,52 @@ LoopAsync(3000, function()
     end
     
     -- ---------------------------------------------
-    -- Example: Setting up the panel
+    -- Example: Adding rows
     -- ---------------------------------------------
-    -- Add rows to the mod panel
+
+    -- Section Header | labelText, style, font, fontsize
     AddRowSectionHeader(ModPanel, "TEST LABEL")
+
+    -- Separator | height, showLine
     AddRowSeparator(ModPanel)
+
+    -- Slider | label, uniqueIdentifier, minValue, maxValue, defaultValue, numberSuffix, decimalCount, snapSlider, snapSize
     AddRowSlider(ModPanel, "Slider", "SliderExampleID", 0, 100, 1)
-    AddRowSeparator(ModPanel, 40, true)
+
+    -- Bool switch | label, uniqueIdentifier, defaultValue
     AddRowBoolSwitch(ModPanel, "ExampleBoolSwitch", "BoolSwitchExampleID", true)
 
-    -- Register callbacks, These are called on change, as well as after loading parameters!
+    -- Switch box row | label, uniqueIdentifier, defaultValue, options
+    local SwitchBoxOptions = {"Option A", "Option B", "Option C"}
+    AddRowSwitchBox(ModPanel, "Choose Option", "OptionChoiceID", 0, SwitchBoxOptions)
+
+    -- String list row | label, uniqueIdentifier
+    AddRowStringList(ModPanel, "My String List", "MyStringListID")
+
+    -- Button row | buttonOneLabel, buttonTwoLabel, uniqueIdentifier, showSecondButton
+    AddRowButtons(ModPanel, "Button 1", "Button 2", "ActionButtonsID", true)
+
+    -- ---------------------------------------------
+    -- Example: Registering callbacks
+    -- These are called on change, as well as after loading parameters if the value isnt default
+    -- --------------------------------------------- 
+
     RegisterCallback(ModPanel, "SliderExampleID", function(value)
-        print("Successfully heard callback:", value)
+        print("Successfully heard callback: " .. tostring(value))
+    end)
+    RegisterCallback(ModPanel, "BoolSwitchExampleID", function(value)
+        print("Successfully heard callback: " .. tostring(value))
+    end)
+    RegisterCallback(ModPanel, "OptionChoiceID", function(value)
+        print("Successfully heard callback: " .. tostring(value))
+    end)
+    RegisterCallback(ModPanel, "MyStringListID", function(value)
+        print("Successfully heard callback: " .. table.concat(value, ", "))
+    end)
+    RegisterCallback(ModPanel, "ActionButtonsID", function(value)
+        print("Successfully heard callback, Button pressed: " .. tostring(value))
     end)
 
-    RegisterCallback(ModPanel, "BoolSwitchExampleID", function(value)
-        print("Successfully heard callback:", value)
-    end)
 
     -- Load parameters after setup is done
     LoadParameters(ModPanel)
@@ -38,7 +67,7 @@ LoopAsync(3000, function()
     
 
     -- ---------------------------------------------
-    -- Example: Using the panel to save parameters
+    -- Example: Using the panel to set and get parameters, and save them
     -- ---------------------------------------------
     -- Bool Parameter Example
     SetBoolParameter(ModPanel, "ExampleBoolParam", true)
