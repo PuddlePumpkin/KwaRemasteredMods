@@ -4,7 +4,7 @@
 `Ctrl+N` to enable / disable
 `Ctrl+Shift+D` to enable / disable debug messages
 
-![Preview Gif](Docs/KwaNotifs.gif)
+![Preview Gif](KwaNotifs.gif)
 ---
 
 ### Usage - Blueprint Via Vanilla Notification
@@ -13,7 +13,7 @@
 No development download required
 
 * Add a vanilla notification, it will get processed alongside them.
-![Notification Vanilla Screenshot](Docs/AddNotificationVanilla.png)
+![Notification Vanilla Screenshot](AddNotificationVanilla.png)
 
 ---
 
@@ -31,13 +31,13 @@ No development download required
 * Add a `BP_NotificationComponent` to your actor (remember that `ModActor` is sometimes destructed so make sure you put the component on a living actor)
 * Call functions on the component
 * To turn on debug messages, click the component on the list, scroll down, and click the OnReady event, when the component is ready, you can call `SetDebugMessagesEnabled`
-![Notification Dummy Screenshot](Docs/AddNotificationsComponent.png)
+![Notification Dummy Screenshot](AddNotificationsComponent.png)
 
 
 #### Via Reference to widget:
 * Get all widgets of class `WBP_KwaNotifs` on a loop until the reference is valid and store it.
 * Call functions on the reference
-![Notification Widget Screenshot](Docs/AddNotificationsWidgetReference.png)
+![Notification Widget Screenshot](AddNotificationsWidgetReference.png)
 
 #### Via Global Notification
 * Just call `PrintNotificationSlow`
@@ -104,7 +104,7 @@ Both `BP_NotificationComponent` and `WBP_ModEntryPoint` expose several bindable 
 * **OnKwaNotification**: Called specifically when a custom notification originating from this system is posted.
 * **OnAnyNotification**: Called whenever any notification is posted, including both vanilla game notifications and custom notifications from this system.
 * **OnVanillaNotification**: Called specifically when a notification originating from the base game is posted.
-![Event Screenshot](Docs/Events.png)
+![Event Screenshot](Events.png)
 
 #### Component Only Event:
 

@@ -3,7 +3,7 @@
 
 `ALT+C` to Open the panel
 
-![Preview Gif](Docs/Configs.gif)
+![Preview Gif](Configs.gif)
 ---
 
 ### Installation:
