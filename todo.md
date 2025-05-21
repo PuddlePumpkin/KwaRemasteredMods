@@ -4,15 +4,15 @@
 
 ## Config Panel:
 ### Blueprint:
-
 ### Lua:
+
 ---
 
 ## Notifications:
-test encumbered -> equip before reflash
+### Blueprint:
+### Lua:
 
-
-
+---
 
 ## Adding new rows:
 Create widget of type TypeParam
