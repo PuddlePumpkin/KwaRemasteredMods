@@ -1,11 +1,22 @@
-## Kwa Config System
+## Kwa Configs
+[UE4SS](https://github.com/UE4SS-RE/RE-UE4SS) Config Panel mod for Oblivion Remastered
 
+`ALT+C` to Open the panel
+
+![Preview Gif](Docs/Configs.gif)
 ---
 ### Installation:
 
 * Download release from the releases tab
 * Extract the .zip to your game install directory ie : `C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered`
-* Ensure your `ue4ss\Mods\BPModLoaderMod` contains a blank `enabled.txt` file, or you've manually activated blueprint mods in UE4SS `"Oblivion Remastered\OblivionRemastered\Binaries\Win64\ue4ss\Mods\mods.txt"`
+* Ensure your `ue4ss\Mods\BPModLoaderMod` contains a blank `enabled.txt` file, or you've manually activated blueprint mods in UE4SS `"ue4ss\Mods\mods.txt"`
+
+---
+
+### Usage - Lua
+* Install the mod as instructed above to your game directory
+No development download required
+*  **Refer to the** [example lua mod at: `KwaConfigPanelFiles/main.lua`](KwaRemasteredMods/KwaConfigPanelFiles/main.lua)
 
 ### Usage - Blueprint
 
@@ -20,18 +31,7 @@
 
 ⚠️**I HIGHLY recommend exploring the example mod located at** `Content/Mods/ExampleMod_P` ⚠️
 
----
 
-### Usage - Lua
-
-*  **Refer to the** [example lua mod: `KwaConfigPanelFiles/main.lua`](KwaRemasteredMods\KwaConfigPanelFiles\main.lua)
-```lua
-require("KwaHelpers.ConfigPanelHelpers")
-    RegisterMod("ExampleMod", true, false, function(modPanel)
-    -- Setup Rows here
-    LoadParameters(modPanel)
-    end)
-```
 ---
 
 **Credits**
