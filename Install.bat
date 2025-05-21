@@ -29,8 +29,8 @@ set "LUA_NAME2=ConfigPanelHelpers.lua"
 set "DEST_DIR_LUA=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\Binaries\Win64\ue4ss\mods\KwaNotificationsLua\Scripts"
 set "RELEASE_DIR_LUA=%~dp0\Release\KwaNotificationsRelease\OblivionRemastered\Binaries\Win64\ue4ss\mods\KwaNotificationsLua\Scripts"
 
-set "DEST_DIR_LUA2=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\Binaries\Win64\ue4ss\mods\KwaConfigPanelLua\Scripts"
-set "RELEASE_DIR_LUA2=%~dp0\Release\KwaConfigPanelRelease\OblivionRemastered\Binaries\Win64\ue4ss\mods\KwaConfigPanelLua\Scripts"
+set "DEST_DIR_LUA2=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\Binaries\Win64\ue4ss\mods\ExampleConfigModLua\Scripts"
+set "RELEASE_DIR_LUA2=%~dp0\Release\ExampleConfigModLua\OblivionRemastered\Binaries\Win64\ue4ss\mods\ExampleConfigModLua\Scripts"
 
 set "DEST_DIR_LUA3=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\Binaries\Win64\ue4ss\mods\shared\KwaHelpers"
 set "RELEASE_DIR_LUA3=%~dp0\Release\KwaConfigPanelRelease\OblivionRemastered\Binaries\Win64\ue4ss\mods\shared\KwaHelpers"

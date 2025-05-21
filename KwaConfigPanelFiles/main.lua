@@ -1,13 +1,13 @@
 require("KwaHelpers.ConfigPanelHelpers")
 
 
-RegisterMod("LuaTestMod", true, false, function(modPanel)
+RegisterMod("LuaExampleMod", true, false, function(modPanel)
     -- ---------------------------------------------
     -- Example: Adding rows, these are all the rows with lua helper functions
     -- ---------------------------------------------
 
     -- Section Header | labelText, style, font, fontsize
-    AddRowSectionHeader(modPanel, "TEST LABEL")
+    AddRowSectionHeader(modPanel, "Lua Example")
 
     -- Separator | height, showLine
     AddRowSeparator(modPanel)
