@@ -15,6 +15,10 @@ set "RENAME=KwaConfigPanelBP_P"
 set "PAKNAME2=pakchunk248-Windows"
 set "RENAME2=KwaNotificationsBP_P"
 
+:: New mod setup: ExampleMod_P
+set "PAKNAME_EXAMPLE=pakchunk38-Windows"
+set "RENAME_EXAMPLE=ExampleMod_P"
+
 :: Lua Main
 set "SOURCE_DIR_LUA=%~dp0\KwaNotifsFiles\"
 set "SOURCE_DIR_LUA2=%~dp0\KwaConfigPanelFiles\"
@@ -38,12 +42,18 @@ if not exist "%DEST_DIR%\%RENAME%" (
 if not exist "%DEST_DIR%\%RENAME2%" (
     mkdir "%DEST_DIR%\%RENAME2%"
 )
+if not exist "%DEST_DIR%\%RENAME_EXAMPLE%" (
+    mkdir "%DEST_DIR%\%RENAME_EXAMPLE%"
+)
 copy "%SOURCE_DIR%\%PAKNAME%.pak" "%DEST_DIR%\%RENAME%\%RENAME%.pak"
 copy "%SOURCE_DIR%\%PAKNAME%.ucas" "%DEST_DIR%\%RENAME%\%RENAME%.ucas"
 copy "%SOURCE_DIR%\%PAKNAME%.utoc" "%DEST_DIR%\%RENAME%\%RENAME%.utoc"
 copy "%SOURCE_DIR%\%PAKNAME2%.pak" "%DEST_DIR%\%RENAME2%\%RENAME2%.pak"
 copy "%SOURCE_DIR%\%PAKNAME2%.ucas" "%DEST_DIR%\%RENAME2%\%RENAME2%.ucas"
 copy "%SOURCE_DIR%\%PAKNAME2%.utoc" "%DEST_DIR%\%RENAME2%\%RENAME2%.utoc"
+copy "%SOURCE_DIR%\%PAKNAME_EXAMPLE%.pak" "%DEST_DIR%\%RENAME_EXAMPLE%\%RENAME_EXAMPLE%.pak"
+copy "%SOURCE_DIR%\%PAKNAME_EXAMPLE%.ucas" "%DEST_DIR%\%RENAME_EXAMPLE%\%RENAME_EXAMPLE%.ucas"
+copy "%SOURCE_DIR%\%PAKNAME_EXAMPLE%.utoc" "%DEST_DIR%\%RENAME_EXAMPLE%\%RENAME_EXAMPLE%.utoc"
 
 :: Same to release
 if not exist "%RELEASE_DIR%\%RENAME%" (

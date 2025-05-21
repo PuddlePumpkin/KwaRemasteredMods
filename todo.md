@@ -6,7 +6,6 @@
 ### Blueprint:
 
 ### Lua:
-add new rows
 ---
 
 ## Notifications:

@@ -1,21 +1,6 @@
----@class FText
----@class FName
-
----@type fun(text: string): FText
-FText = FText or function(text) return text end
-
----@type fun(name: string): FName
-FName = FName or function(name) return name end
-
----@type fun(ms: number, callback: function): void
-LoopAsync = LoopAsync or function(ms, callback) end
-
----@type fun(path: string, callback: function): void
-RegisterHook = RegisterHook or function(path, callback) end
-
----@type fun(className: string): table
-FindFirstOf = FindFirstOf or function(className) return {} end
-
+-- -------------------------------------------------------
+-- State Declarations
+-- -------------------------------------------------------
 local HookCreated = {
     float = false,
     int = false,
@@ -25,6 +10,7 @@ local HookCreated = {
 }
 
 local RequestedHooks = {}
+local bParametersLoaded = false
 
 -- -------------------------------------------------------
 -- HeaderTypes
@@ -116,11 +102,11 @@ end
 ---@param defaultValue? number Default value (default: minValue)
 ---@param numberSuffix? string Suffix to display after the number (default: "")
 ---@param decimalCount? number Number of decimal places (default: 0)
----@param snapSlider? boolean Whether to snap to increments (default: false)
+---@param bDoSnapSlider? boolean Whether to snap to increments (default: false)
 ---@param snapSize? number Size of snap increments (default: 1)
-function AddRowSlider(modPanel, label, uniqueIdentifier, minValue, maxValue, defaultValue, numberSuffix, decimalCount, snapSlider, snapSize)
+function AddRowSlider(modPanel, label, uniqueIdentifier, minValue, maxValue, defaultValue, numberSuffix, decimalCount, bDoSnapSlider, snapSize)
     if not modPanel or not modPanel:IsValid() then
-        print("[KCnfg] AddRowSlider: modPanel is nil or invalid")
+        error("[KCnfg] AddRowSlider: modPanel is nil or invalid")
         return
     end
     --print("[KCnfg] Adding slider:", label, "with id:", uniqueIdentifier)
@@ -133,7 +119,7 @@ function AddRowSlider(modPanel, label, uniqueIdentifier, minValue, maxValue, def
         defaultValue or (minValue or 0),
         FText(numberSuffix or ""),
         decimalCount or 0,
-        snapSlider or false,
+        bDoSnapSlider or false,
         snapSize or 1,
         ReturnValue
     )
@@ -150,10 +136,10 @@ end
 ---@param defaultValue? boolean Default value (default: false)
 function AddRowBoolSwitch(modPanel, label, uniqueIdentifier, defaultValue)
     if not modPanel or not modPanel:IsValid() then
-        print("[KCnfg] AddRowBoolSwitch: modPanel is nil or invalid")
+        error("[KCnfg] AddRowBoolSwitch: modPanel is nil or invalid")
         return
     end
-    print("[KCnfg] Adding bool switch:", label, "with id:", uniqueIdentifier)
+    --print("[KCnfg] Adding bool switch:", label, "with id:", uniqueIdentifier)
     local ReturnValue = {}
     modPanel:AddRowBoolSwitch(
         FText(label),
@@ -162,7 +148,7 @@ function AddRowBoolSwitch(modPanel, label, uniqueIdentifier, defaultValue)
         ReturnValue
     )
     SetupBoolCallbackHook()
-    print("[KCnfg] Bool switch added")
+    --print("[KCnfg] Bool switch added")
 end
 
 -- -------------------------------------------------------
@@ -175,10 +161,10 @@ end
 ---@param options string[] A list of strings for the options
 function AddRowSwitchBox(modPanel, label, uniqueIdentifier, defaultValue, options)
     if not modPanel or not modPanel:IsValid() then
-        print("[KCnfg] AddRowSwitchBox: modPanel is nil or invalid")
+        error("[KCnfg] AddRowSwitchBox: modPanel is nil or invalid")
         return
     end
-    print("[KCnfg] Adding switch box:", label, "with id:", uniqueIdentifier)
+    --print("[KCnfg] Adding switch box:", label, "with id:", uniqueIdentifier)
 
     -- Convert Lua table of strings to table of FText objects for options
     local optionsFText = {}
@@ -197,7 +183,7 @@ function AddRowSwitchBox(modPanel, label, uniqueIdentifier, defaultValue, option
         ReturnValue
     )
     SetupIntCallbackHook() -- It's an integer type parameter
-    print("[KCnfg] Switch box added")
+    --print("[KCnfg] Switch box added")
 end
 
 -- -------------------------------------------------------
@@ -208,10 +194,10 @@ end
 ---@param uniqueIdentifier string Unique identifier for saving the value
 function AddRowStringList(modPanel, label, uniqueIdentifier)
     if not modPanel or not modPanel:IsValid() then
-        print("[KCnfg] AddRowStringList: modPanel is nil or invalid")
+        error("[KCnfg] AddRowStringList: modPanel is nil or invalid")
         return
     end
-    print("[KCnfg] Adding string list:", label, "with id:", uniqueIdentifier)
+    --print("[KCnfg] Adding string list:", label, "with id:", uniqueIdentifier)
 
     local ReturnValue = {}
     modPanel:AddRowStringList(
@@ -220,7 +206,7 @@ function AddRowStringList(modPanel, label, uniqueIdentifier)
         ReturnValue
     )
     SetupStringArrayCallbackHook() -- It's a string array type parameter
-    print("[KCnfg] String list added")
+    --print("[KCnfg] String list added")
 end
 
 -- -------------------------------------------------------
@@ -233,10 +219,10 @@ end
 ---@param showSecondButton? boolean Whether to show the second button (default: true)
 function AddRowButtons(modPanel, buttonOneLabel, buttonTwoLabel, uniqueIdentifier, showSecondButton)
     if not modPanel or not modPanel:IsValid() then
-        print("[KCnfg] AddRowButtons: modPanel is nil or invalid")
+        error("[KCnfg] AddRowButtons: modPanel is nil or invalid")
         return
     end
-    print("[KCnfg] Adding buttons row:", uniqueIdentifier)
+    --print("[KCnfg] Adding buttons row:", uniqueIdentifier)
 
     local ReturnValue = {}
     modPanel:AddRowButtons(
@@ -247,14 +233,15 @@ function AddRowButtons(modPanel, buttonOneLabel, buttonTwoLabel, uniqueIdentifie
         ReturnValue
     )
     SetupIntCallbackHook()
-    print("[KCnfg] Buttons row added")
+    --print("[KCnfg] Buttons row added")
 end
 
 -- -------------------------------------------------------
 -- Load Params
 -- -------------------------------------------------------
 ---@param modPanel table The mod configuration panel
-function LoadParameters(modPanel)
+---@param onParametersLoaded? fun() Optional callback to execute after parameters are loaded
+function LoadParameters(modPanel, onParametersLoaded)
     if not modPanel then return end
 
     -- Use LoopAsync to wait for all *requested* hooks to be created
@@ -269,14 +256,22 @@ function LoadParameters(modPanel)
         end
 
         if allHooksReady then
-            print("[KCnfg] All requested hooks registered. Loading parameters.")
+            --print("[KCnfg] All requested hooks registered. Loading parameters.")
             ExecuteInGameThread(function()
                 modPanel:LoadParameters()
             end)
+            bParametersLoaded = true
+            
+            -- Execute callback if provided
+            if onParametersLoaded and type(onParametersLoaded) == "function" then
+                --print("[KCnfg] Executing onParametersLoaded callback")
+                onParametersLoaded()
+            end
+
             return true -- Stop LoopAsync
         else
             -- Print status to help debug if waiting is stuck
-            print("[KCnfg] Waiting for hooks: " .. table.concat(waitingForHooks, ", "))
+            --print("[KCnfg] Waiting for hooks: " .. table.concat(waitingForHooks, ", "))
             return false -- Continue LoopAsync
         end
     end)
@@ -559,8 +554,9 @@ local RegisteredPanel = nil
 ---@param modName string The name of your mod
 ---@param doHandleSaves? boolean Whether to handle saves (default: true)
 ---@param onlyHandleSaves? boolean Whether to only handle saves, no config panel (default: false)
----@return table|nil panel The configuration panel, or nil if not ready yet
-function RegisterMod(modName, doHandleSaves, onlyHandleSaves)
+---@param onPanelRegistered? fun(panel: table) Optional callback to execute when the panel is successfully registered
+---@return table|nil panel The configuration panel, or nil if not ready yet (the panel is returned asynchronously via the callback)
+function RegisterMod(modName, doHandleSaves, onlyHandleSaves, onPanelRegistered)
     if not modName then
         error("modName is required")
         return nil
@@ -610,7 +606,14 @@ function RegisterMod(modName, doHandleSaves, onlyHandleSaves)
 
         RegisteredPanel = ReturnValue.YourPanel
         bPanelRegistered = true
-        return true
+        
+        -- Execute the callback if provided
+        if onPanelRegistered and type(onPanelRegistered) == "function" then
+            --print("[KCnfg]["..modName.."] Executing onPanelRegistered callback")
+            onPanelRegistered(RegisteredPanel)
+        end
+
+        return true -- Stop LoopAsync
     end)
 
     return RegisteredPanel
