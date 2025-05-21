@@ -24,6 +24,8 @@ local HookCreated = {
     bool = false
 }
 
+local RequestedHooks = {}
+
 -- -------------------------------------------------------
 -- HeaderTypes
 -- -------------------------------------------------------
@@ -169,8 +171,29 @@ end
 ---@param modPanel table The mod configuration panel
 function LoadParameters(modPanel)
     if not modPanel then return end
-    ExecuteInGameThread(function()
-        modPanel:LoadParameters()
+
+    -- Use LoopAsync to wait for all *requested* hooks to be created
+    LoopAsync(1000, function()
+        local allHooksReady = true
+        local waitingForHooks = {}
+        for hookName, requested in pairs(RequestedHooks) do
+            if requested and not HookCreated[hookName] then
+                allHooksReady = false
+                table.insert(waitingForHooks, hookName .. "=false")
+            end
+        end
+
+        if allHooksReady then
+            print("[KCnfg] All requested hooks registered. Loading parameters.")
+            ExecuteInGameThread(function()
+                modPanel:LoadParameters()
+            end)
+            return true -- Stop LoopAsync
+        else
+            -- Print status to help debug if waiting is stuck
+            print("[KCnfg] Waiting for hooks: " .. table.concat(waitingForHooks, ", "))
+            return false -- Continue LoopAsync
+        end
     end)
 end
 
@@ -204,7 +227,8 @@ end
 
 function SetupFloatCallbackHook()
     -- Float hook
-    LoopAsync(3000, function()
+    RequestedHooks.float = true
+    LoopAsync(1000, function()
         if HookCreated.float then return true end
         if pcall(function()
             --print("[KCnfg] Registering float callback hook")
@@ -246,7 +270,8 @@ end
 
 function SetupIntCallbackHook()
     -- Int hook
-    LoopAsync(3000, function()
+    RequestedHooks.int = true
+    LoopAsync(1000, function()
         if HookCreated.int then return true end
         if pcall(function()
             --print("[KCnfg] Registering int callback hook")
@@ -285,7 +310,7 @@ end
 
 function SetupBoolCallbackHook()
     -- Bool hook
-    LoopAsync(3000, function()
+    LoopAsync(1000, function()
         if HookCreated.bool then return true end
         if pcall(function()
             --print("[KCnfg] Registering bool callback hook")
@@ -324,7 +349,8 @@ end
 
 function SetupStringCallbackHook()
     -- String hook
-    LoopAsync(3000, function()
+    RequestedHooks.string = true
+    LoopAsync(1000, function()
         if HookCreated.string then return true end
         if pcall(function()
             --print("[KCnfg] Registering string callback hook")
@@ -363,7 +389,8 @@ end
 
 function SetupStringArrayCallbackHook()
     -- String Array hook
-    LoopAsync(3000, function()        
+    RequestedHooks.stringArray = true
+    LoopAsync(1000, function()
         if HookCreated.stringArray then return true end
         if pcall(function()
             --print("[KCnfg] Registering string array callback hook")
