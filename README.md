@@ -7,10 +7,10 @@ This project is **NOT** associated with Bethesda, Zenimax, Virtuos or any of the
 
 ### Mods: 
 
-*   **[Kwa Configs](docs/ConfigReadme.md)**: A framework mod that allows other mods to register and add simple UI elements for configuration. Parameters are automatically saved when set.
+*   **[Kwa Configs](Docs/ConfigReadme.md)**: A framework mod that allows other mods to register and add simple UI elements for configuration. Parameters are automatically saved when set.
 ![Preview Gif](Docs/Configs.gif)
 
-*   **[Kwa Notifications](docs/NotifsReadme.md)** [On Nexus](https://www.nexusmods.com/oblivionremastered/mods/2697): A replacement for the base notification system. Featuring stacking notifications, debug printing, and integrated with Kwa Configs to add options for appearance.
+*   **[Kwa Notifications](Docs/NotifsReadme.md)**: A replacement for the base notification system. Featuring stacking notifications, debug printing, and integrated with Kwa Configs to add options for appearance. [On Nexus 🗺️](https://www.nexusmods.com/oblivionremastered/mods/2697)
 ![Preview Gif](Docs/KwaNotifs.gif)
 
 **Credits**  
