@@ -5,6 +5,7 @@
 
 ![Preview Gif](Docs/Configs.gif)
 ---
+
 ### Installation:
 
 * Download release from the releases tab
