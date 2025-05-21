@@ -121,7 +121,7 @@ The `BPFL_KwaNotifications` Global blueprint function for triggering notificatio
 ---
 
 **Credits**  
-* **Kein Altar UHT SDK Dump**  
+* **Kein UHT SDK Dump**  
 ↳ [github.com/Kein/Altar](https://github.com/Kein/Altar)  
 * **UE4SS**  
 ↳ [github.com/UE4SS-RE/RE-UE4SS](https://github.com/UE4SS-RE/RE-UE4SS)  
