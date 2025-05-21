@@ -573,14 +573,22 @@ function RegisterMod(modName, doHandleSaves, onlyHandleSaves, onPanelRegistered)
     if doHandleSaves == nil then doHandleSaves = true end
     if onlyHandleSaves == nil then onlyHandleSaves = false end
 
+    local attemptCount = 0 -- Initialize attempt counter
+
     -- Keep trying to register until we succeed
     LoopAsync(3000, function()
         if bPanelRegistered then return true end
 
+        attemptCount = attemptCount + 1 -- Increment counter
+
         local MainPanel = FindFirstOf("WBP_KConfigPanel_C")
         if not MainPanel or not MainPanel:IsValid() then
-            print("[KCnfg]["..modName.."] Mod panel not found, retrying...")
-            return false
+            --print("[KCnfg]["..modName.."] Mod panel not found, retrying...")
+            if attemptCount >= 10 then
+                print("[KCnfg]["..modName.."] Max registration attempts (10) reached.")
+                return true -- Stop LoopAsync
+            end
+            return false -- Continue LoopAsync
         end
         
         print("[KCnfg]["..modName.."] Found main panel, attempting to register")
