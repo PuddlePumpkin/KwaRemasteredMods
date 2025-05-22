@@ -10,7 +10,6 @@ local HookCreated = {
 }
 
 local RequestedHooks = {}
-local bParametersLoaded = false
 
 -- -------------------------------------------------------
 -- HeaderTypes
@@ -62,13 +61,11 @@ end
 ---@param fontsize? number the size of the font to use (default 25)
 function AddRowSectionHeader(modPanel, labelText, style, font, fontsize)
     if not modPanel or not modPanel:IsValid() then
-        --print("[KCnfg] Invalid mod panel")
         return
     end
     
     local resolvedStyle = GetHeaderType(style or 5)  -- Default to "Label"
     local resolvedFont = GetFontType(font or 0)  -- Default to "Kingthings"
-    --print("[KCnfg] Adding section header:", labelText, "Type:", resolvedStyle, "Font:", resolvedFont)
     
     local ReturnValue = {}
     modPanel:AddRowSectionHeader(FText(labelText), resolvedStyle, resolvedFont, fontsize or 25, ReturnValue)
@@ -82,10 +79,8 @@ end
 ---@param showLine? boolean enable to show the line (default: true)
 function AddRowSeparator(modPanel, height, showLine)
     if not modPanel or not modPanel:IsValid() then
-        --print("Invalid mod panel")
         return
     end
-    --print("[KCnfg] Adding Separator")
     
     local ReturnValue = {}
     modPanel:AddRowSeparator(height or 16, showLine or true, ReturnValue)
@@ -109,7 +104,6 @@ function AddRowSlider(modPanel, label, uniqueIdentifier, minValue, maxValue, def
         error("[KCnfg] AddRowSlider: modPanel is nil or invalid")
         return
     end
-    --print("[KCnfg] Adding slider:", label, "with id:", uniqueIdentifier)
     local ReturnValue = {}
     modPanel:AddRowSlider(
         FText(label),
@@ -124,7 +118,6 @@ function AddRowSlider(modPanel, label, uniqueIdentifier, minValue, maxValue, def
         ReturnValue
     )
     SetupFloatCallbackHook()
-    --print("[KCnfg] Slider added")
 end
 
 -- -------------------------------------------------------
@@ -139,7 +132,6 @@ function AddRowBoolSwitch(modPanel, label, uniqueIdentifier, defaultValue)
         error("[KCnfg] AddRowBoolSwitch: modPanel is nil or invalid")
         return
     end
-    --print("[KCnfg] Adding bool switch:", label, "with id:", uniqueIdentifier)
     local ReturnValue = {}
     modPanel:AddRowBoolSwitch(
         FText(label),
@@ -148,7 +140,6 @@ function AddRowBoolSwitch(modPanel, label, uniqueIdentifier, defaultValue)
         ReturnValue
     )
     SetupBoolCallbackHook()
-    --print("[KCnfg] Bool switch added")
 end
 
 -- -------------------------------------------------------
@@ -164,8 +155,7 @@ function AddRowSwitchBox(modPanel, label, uniqueIdentifier, defaultValue, option
         error("[KCnfg] AddRowSwitchBox: modPanel is nil or invalid")
         return
     end
-    --print("[KCnfg] Adding switch box:", label, "with id:", uniqueIdentifier)
-
+    
     -- Convert Lua table of strings to table of FText objects for options
     local optionsFText = {}
     if options then
@@ -183,7 +173,6 @@ function AddRowSwitchBox(modPanel, label, uniqueIdentifier, defaultValue, option
         ReturnValue
     )
     SetupIntCallbackHook() -- It's an integer type parameter
-    --print("[KCnfg] Switch box added")
 end
 
 -- -------------------------------------------------------
@@ -197,8 +186,7 @@ function AddRowStringList(modPanel, label, uniqueIdentifier)
         error("[KCnfg] AddRowStringList: modPanel is nil or invalid")
         return
     end
-    --print("[KCnfg] Adding string list:", label, "with id:", uniqueIdentifier)
-
+    
     local ReturnValue = {}
     modPanel:AddRowStringList(
         FText(label),
@@ -206,7 +194,6 @@ function AddRowStringList(modPanel, label, uniqueIdentifier)
         ReturnValue
     )
     SetupStringArrayCallbackHook() -- It's a string array type parameter
-    --print("[KCnfg] String list added")
 end
 
 -- -------------------------------------------------------
@@ -222,8 +209,7 @@ function AddRowButtons(modPanel, buttonOneLabel, buttonTwoLabel, uniqueIdentifie
         error("[KCnfg] AddRowButtons: modPanel is nil or invalid")
         return
     end
-    --print("[KCnfg] Adding buttons row:", uniqueIdentifier)
-
+    
     local ReturnValue = {}
     modPanel:AddRowButtons(
         FText(buttonOneLabel),
@@ -233,7 +219,6 @@ function AddRowButtons(modPanel, buttonOneLabel, buttonTwoLabel, uniqueIdentifie
         ReturnValue
     )
     SetupIntCallbackHook()
-    --print("[KCnfg] Buttons row added")
 end
 
 -- -------------------------------------------------------
@@ -256,22 +241,17 @@ function LoadParameters(modPanel, onParametersLoaded)
         end
 
         if allHooksReady then
-            --print("[KCnfg] All requested hooks registered. Loading parameters.")
             ExecuteInGameThread(function()
                 modPanel:LoadParameters()
             end)
-            bParametersLoaded = true
             
             -- Execute callback if provided
             if onParametersLoaded and type(onParametersLoaded) == "function" then
-                --print("[KCnfg] Executing onParametersLoaded callback")
                 onParametersLoaded()
             end
 
             return true -- Stop LoopAsync
         else
-            -- Print status to help debug if waiting is stuck
-            --print("[KCnfg] Waiting for hooks: " .. table.concat(waitingForHooks, ", "))
             return false -- Continue LoopAsync
         end
     end)
@@ -292,12 +272,10 @@ local mod_panel_callbacks = {}
 ---@param callback fun(value: any) Callback function that receives the changed value
 function RegisterCallback(modPanel, saveId, callback)
     if not modPanel or not modPanel:IsValid() then
-        --print("[KCnfg] RegisterCallback: Invalid mod panel")
         return
     end
     
     local addr = modPanel:GetAddress()
-    --print("[KCnfg] Registering callback for panel:", addr, "param:", saveId)
     
     if not mod_panel_callbacks[addr] then
         mod_panel_callbacks[addr] = {}
@@ -307,17 +285,11 @@ end
 
 function SetupFloatCallbackHook()
     -- Float hook
-    RequestedHooks.float = true
-    LoopAsync(1000, function()
-        if HookCreated.float then return true end
-        if pcall(function()
-            --print("[KCnfg] Registering float callback hook")
-            RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaFloatCallback", 
+    AttemptRegisterHookAsync("float", "/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaFloatCallback",
                 function(PanelRef, ParameterName, ParameterValue)
                     -- Get the actual panel instance from the reference
                     local panelInstance = PanelRef:get()
                     if not panelInstance or not panelInstance.IsValid or not panelInstance:IsValid() then
-                        --print("[KCnfg] Invalid panel reference in float callback")
                         return
                     end
                     
@@ -326,40 +298,20 @@ function SetupFloatCallbackHook()
                     local name = ParameterName:get():ToString()
                     local value = ParameterValue:get()
                     
-                    --print(string.format("Float callback: Panel %s | Param %s | Value %s", addr, name, value))
-                    
                     -- Find and execute callback
                     local panelCallbacks = mod_panel_callbacks[addr]
                     if panelCallbacks and panelCallbacks[name] then
                         panelCallbacks[name](value)
-                    else
-                        --print(string.format("No callback found for %s in panel %s", name, addr))
                     end
                 end)
-            
-            --print("[KCnfg] Float callback hook registered successfully")
-            HookCreated.float = true
-            return true
-        end) then return true
-        else
-            --print("[KCnfg] Failed to register float callback hook")
-            return false
-        end
-    end)
 end
 
 function SetupIntCallbackHook()
     -- Int hook
-    RequestedHooks.int = true
-    LoopAsync(1000, function()
-        if HookCreated.int then return true end
-        if pcall(function()
-            --print("[KCnfg] Registering int callback hook")
-            RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaIntCallback", 
+    AttemptRegisterHookAsync("int", "/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaIntCallback",
                 function(PanelRef, ParameterName, ParameterValue)
                     local panelInstance = PanelRef:get()
                     if not panelInstance or not panelInstance.IsValid or not panelInstance:IsValid() then
-                        --print("[KCnfg] Invalid panel reference in int callback")
                         return
                     end
                     
@@ -367,38 +319,19 @@ function SetupIntCallbackHook()
                     local name = ParameterName:get():ToString()
                     local value = math.floor(ParameterValue:get())  -- Ensure integer value
                     
-                    --print(string.format("Int callback: Panel %s | Param %s | Value %d", addr, name, value))
-                    
                     local panelCallbacks = mod_panel_callbacks[addr]
                     if panelCallbacks and panelCallbacks[name] then
                         panelCallbacks[name](value)
-                    else
-                        --print(string.format("No int callback for %s in panel %s", name, addr))
                     end
                 end)
-            
-            --print("[KCnfg] Int callback hook registered successfully")
-            HookCreated.int = true
-            return true
-        end) then return true
-        else
-            --print("[KCnfg] Failed to register int callback hook")
-            return false
-        end
-    end)
 end
 
 function SetupBoolCallbackHook()
     -- Bool hook
-    LoopAsync(1000, function()
-        if HookCreated.bool then return true end
-        if pcall(function()
-            --print("[KCnfg] Registering bool callback hook")
-            RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaBoolCallback", 
+    AttemptRegisterHookAsync("bool", "/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaBoolCallback",
                 function(PanelRef, ParameterName, ParameterValue)
                     local panelInstance = PanelRef:get()
                     if not panelInstance or not panelInstance.IsValid or not panelInstance:IsValid() then
-                        --print("[KCnfg] Invalid panel reference in bool callback")
                         return
                     end
                     
@@ -406,39 +339,19 @@ function SetupBoolCallbackHook()
                     local name = ParameterName:get():ToString()
                     local value = ParameterValue:get() and true or false  -- Force boolean
                     
-                    --print(string.format("Bool callback: Panel %s | Param %s | Value %s", addr, name, tostring(value)))
-                    
                     local panelCallbacks = mod_panel_callbacks[addr]
                     if panelCallbacks and panelCallbacks[name] then
                         panelCallbacks[name](value)
-                    else
-                        --print(string.format("No bool callback for %s in panel %s", name, addr))
                     end
                 end)
-            
-            --print("[KCnfg] Bool callback hook registered successfully")
-            HookCreated.bool = true
-            return true
-        end) then return true
-        else
-            --print("[KCnfg] Failed to register bool callback hook")
-            return false
-        end
-    end)
 end
 
 function SetupStringCallbackHook()
     -- String hook
-    RequestedHooks.string = true
-    LoopAsync(1000, function()
-        if HookCreated.string then return true end
-        if pcall(function()
-            --print("[KCnfg] Registering string callback hook")
-            RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaStringCallback", 
+    AttemptRegisterHookAsync("string", "/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaStringCallback",
                 function(PanelRef, ParameterName, ParameterValue)
                     local panelInstance = PanelRef:get()
                     if not panelInstance or not panelInstance.IsValid or not panelInstance:IsValid() then
-                        --print("[KCnfg] Invalid panel reference in string callback")
                         return
                     end
                     
@@ -446,39 +359,19 @@ function SetupStringCallbackHook()
                     local name = ParameterName:get():ToString()
                     local value = ParameterValue:get():ToString()
                     
-                    --print(string.format("String callback: Panel %s | Param %s | Value %s", addr, name, value))
-                    
                     local panelCallbacks = mod_panel_callbacks[addr]
                     if panelCallbacks and panelCallbacks[name] then
                         panelCallbacks[name](value)
-                    else
-                        --print(string.format("No string callback for %s in panel %s", name, addr))
                     end
                 end)
-            
-            --print("[KCnfg] String callback hook registered successfully")
-            HookCreated.string = true
-            return true
-        end) then return true
-        else
-            --print("[KCnfg] Failed to register string callback hook")
-            return false
-        end
-    end)
 end
 
 function SetupStringArrayCallbackHook()
     -- String Array hook
-    RequestedHooks.stringArray = true
-    LoopAsync(1000, function()
-        if HookCreated.stringArray then return true end
-        if pcall(function()
-            --print("[KCnfg] Registering string array callback hook")
-            RegisterHook("/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaStringArrayCallback",
+    AttemptRegisterHookAsync("stringArray", "/Game/Mods/KwaConfigPanelBP_P/WBP_KModPanel.WBP_KModPanel_C:LuaStringArrayCallback",
                 function(PanelRef, ParameterName, ParameterValue)
                     local panelInstance = PanelRef:get()
                     if not panelInstance or not panelInstance.IsValid or not panelInstance:IsValid() then
-                        --print("[KCnfg] Invalid panel reference in string array callback")
                         return
                     end
 
@@ -489,7 +382,6 @@ function SetupStringArrayCallbackHook()
                     local array = ParameterValue:get() -- Get the underlying TArray object
 
                     if not array or (type(array) == "userdata" and not array.GetArrayNum) then
-                        --print("[KCnfg] String array callback: ParameterValue is not a valid TArray.")
                         return
                     end
 
@@ -498,50 +390,32 @@ function SetupStringArrayCallbackHook()
                     local arrayLength = array:GetArrayNum()
                     
                     if arrayLength > 0 then
-                        --print("[KCnfg] String array found with length:", arrayLength)
                         -- Assuming the underlying array is 1-indexed in this context
                         for i = 1, arrayLength do
-                            --print(string.format("[KCnfg][DEBUG] Accessing element at index %d", i))
                             local success, elem = pcall(function()
                                 return array[i]
                             end)
                             if success and elem then
-                                --print(string.format("[KCnfg][DEBUG] Successfully got element at index %d, type: %s", i, type(elem)))
                                 local success, str = pcall(function()
-                                    return elem:ToString()
+                                    if type(elem) == "userdata" and elem.ToString then
+                                        return elem:ToString()
+                                    else
+                                        -- If not a userdata with ToString, treat as is
+                                        return tostring(elem)
+                                    end
                                 end)
                                 if success then
-                                     --print(string.format("[KCnfg][DEBUG] Converted element %d to string: '%s' (empty: %s)", i, str, str == ""))
-                                    -- Removed the str ~= "" check to see if elements are truly empty
                                     table.insert(valueArray, str)
-                                else
-                                    --print(string.format("[KCnfg][DEBUG] Failed to convert element %d to string", i))
                                 end
-                            else
-                                --print(string.format("[KCnfg][DEBUG] Failed to get element at index %d", i))
                             end
                         end
                     end
 
-                    --print("[KCnfg] String array found:", table.concat(valueArray, ", ")) -- Uncomment for verbose logging
                     local panelCallbacks = mod_panel_callbacks[addr]
                     if panelCallbacks and panelCallbacks[name] then
                         panelCallbacks[name](valueArray)
-                    else
-                         --print(string.format("[KCnfg] No string array callback for %s in panel %s", name, addr))
                     end
                 end)
-
-            --print("[KCnfg] String array callback hook registered successfully")
-            HookCreated.stringArray = true
-            return true
-        end) then 
-            return true
-        else
-            --print("[KCnfg] Failed to register string array callback hook")
-            return false
-        end
-    end)
 end
 
 -- -------------------------------------------------------
@@ -583,7 +457,6 @@ function RegisterMod(modName, doHandleSaves, onlyHandleSaves, onPanelRegistered)
 
         local MainPanel = FindFirstOf("WBP_KConfigPanel_C")
         if not MainPanel or not MainPanel:IsValid() then
-            --print("[KCnfg]["..modName.."] Mod panel not found, retrying...")
             if attemptCount >= 10 then
                 print("[KCnfg]["..modName.."] Max registration attempts (10) reached.")
                 return true -- Stop LoopAsync
@@ -617,7 +490,6 @@ function RegisterMod(modName, doHandleSaves, onlyHandleSaves, onPanelRegistered)
         
         -- Execute the callback if provided
         if onPanelRegistered and type(onPanelRegistered) == "function" then
-            --print("[KCnfg]["..modName.."] Executing onPanelRegistered callback")
             onPanelRegistered(RegisteredPanel)
         end
 
@@ -776,6 +648,27 @@ function GetStringArrayParameter(modPanel, uniqueIdentifier)
     end
 
     return arrayData, found
+end
+
+-- -------------------------------------------------------
+-- Attempts to register a Blueprint hook asynchronously with retry logic.
+---@param hookTypeName string The key in the HookCreated and RequestedHooks tables (e.g., "float", "int").
+---@param blueprintPath string The full Blueprint path for the hook.
+---@param callbackFunction fun(PanelRef: userdata, ParameterName: userdata, ParameterValue: any) The Lua function to execute when the hook is triggered.
+function AttemptRegisterHookAsync(hookTypeName, blueprintPath, callbackFunction)
+    RequestedHooks[hookTypeName] = true
+    LoopAsync(1000, function()
+        if HookCreated[hookTypeName] then return true end
+        if pcall(function()
+            RegisterHook(blueprintPath, callbackFunction)
+            HookCreated[hookTypeName] = true
+            return true
+        end) then
+            return true
+        else
+            return false
+        end
+    end)
 end
 
 
