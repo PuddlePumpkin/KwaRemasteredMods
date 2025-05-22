@@ -17,7 +17,7 @@
 ### Usage - Lua
 * Install the mod as instructed above to your game directory
 No development download required
-*  **Refer to the** [example lua mod at: `KwaConfigPanelFiles/main.lua`](KwaRemasteredMods/KwaConfigPanelFiles/main.lua)
+*  **Refer to the** [example lua mod at: `KwaConfigPanelFiles/main.lua`](../KwaConfigPanelFiles/main.lua)
 
 ### Usage - Blueprint
 
