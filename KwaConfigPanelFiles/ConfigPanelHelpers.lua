@@ -424,9 +424,6 @@ end
 -- Register Mod
 -- -------------------------------------------------------
 
-local bPanelRegistered = false
-local RegisteredPanel = nil
-
 ---@param modName string The name of your mod
 ---@param doHandleSaves? boolean Whether to handle saves (default: true)
 ---@param onlyHandleSaves? boolean Whether to only handle saves, no config panel (default: false)
@@ -436,11 +433,6 @@ function RegisterMod(modName, doHandleSaves, onlyHandleSaves, onPanelRegistered)
     if not modName then
         error("modName is required")
         return nil
-    end
-
-    -- If already registered, return the existing panel
-    if bPanelRegistered then
-        return RegisteredPanel
     end
 
     print("[KCnfg]["..modName.."] Attempting to register mod:")
@@ -453,8 +445,6 @@ function RegisterMod(modName, doHandleSaves, onlyHandleSaves, onPanelRegistered)
 
     -- Keep trying to register until we succeed
     LoopAsync(3000, function()
-        if bPanelRegistered then return true end
-
         attemptCount = attemptCount + 1 -- Increment counter
 
         local MainPanel = FindFirstOf("WBP_KConfigPanel_C")
@@ -465,13 +455,13 @@ function RegisterMod(modName, doHandleSaves, onlyHandleSaves, onPanelRegistered)
             end
             return false -- Continue LoopAsync
         end
-        
+
         print("[KCnfg]["..modName.."] Found main panel, attempting to register")
-        
+
         -- Create return value table and register mod
         local ReturnValue = {}
         MainPanel:RegisterMod(modName, doHandleSaves, onlyHandleSaves, ReturnValue)
-        
+
         -- Check if we got the panel
         if not ReturnValue.YourPanel then
             print("[KCnfg]["..modName.."] Warning: ReturnValue.YourPanel is nil")
@@ -483,22 +473,19 @@ function RegisterMod(modName, doHandleSaves, onlyHandleSaves, onPanelRegistered)
         if ReturnValue.YourPanel.IsValid then
             print("[KCnfg]["..modName.."] Panel is valid:", ReturnValue.YourPanel:IsValid())
         end
-        
+
         -- Only set up callbacks if we successfully registered
         print("[KCnfg]["..modName.."] Callback setup complete")
 
-        RegisteredPanel = ReturnValue.YourPanel
-        bPanelRegistered = true
-        
         -- Execute the callback if provided
         if onPanelRegistered and type(onPanelRegistered) == "function" then
-            onPanelRegistered(RegisteredPanel)
+            onPanelRegistered(ReturnValue.YourPanel)
         end
 
         return true -- Stop LoopAsync
     end)
 
-    return RegisteredPanel
+    return nil -- Initial return is nil, panel returned async via callback
 end
 
 -- -------------------------------------------------------
