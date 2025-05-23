@@ -181,7 +181,8 @@ end
 ---@param modPanel table The mod configuration panel
 ---@param label string Label text for the string list
 ---@param uniqueIdentifier string Unique identifier for saving the value
-function AddRowStringList(modPanel, label, uniqueIdentifier)
+---@param height? number The height of the panel (default: 250)
+function AddRowStringList(modPanel, label, uniqueIdentifier, height)
     if not modPanel or not modPanel:IsValid() then
         error("[KCnfg] AddRowStringList: modPanel is nil or invalid")
         return
@@ -191,6 +192,7 @@ function AddRowStringList(modPanel, label, uniqueIdentifier)
     modPanel:AddRowStringList(
         FText(label),
         FName(uniqueIdentifier),
+        height or 250,
         ReturnValue
     )
     SetupStringArrayCallbackHook() -- It's a string array type parameter

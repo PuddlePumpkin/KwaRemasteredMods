@@ -17,4 +17,14 @@ This project is **NOT** associated with Bethesda, Zenimax, Virtuos or any of the
 * **Kein UHT SDK Dump**  
 ↳ [github.com/Kein/Altar](https://github.com/Kein/Altar)  
 * **UE4SS**  
-↳ [github.com/UE4SS-RE/RE-UE4SS](https://github.com/UE4SS-RE/RE-UE4SS)  
+↳ [github.com/UE4SS-RE/RE-UE4SS](https://github.com/UE4SS-RE/RE-UE4SS)
+
+### Unreal Project Structure
+
+Blueprint mods are primarily located within the `Content/Mods/` directory:
+
+*   `Content/Mods/ExampleMod_P`
+*   `Content/Mods/KwaConfigPanelBP_P`
+*   `Content/Mods/KwaNotificationsBP_P`
+
+Other content directories contain dummy assets that are not included in the final packaged mods.

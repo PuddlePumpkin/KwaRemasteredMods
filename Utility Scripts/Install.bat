@@ -4,11 +4,11 @@ setlocal enabledelayedexpansion
 
 :: DEFINE THESE 
 :: Your built blueprint mod pak folder
-set "SOURCE_DIR=%~dp0\Windows\OblivionRemastered\Content\Paks"
+set "SOURCE_DIR=%~dp0\..\Windows\OblivionRemastered\Content\Paks"
 :: Your Oblivion LogicMods Directory
 set "DEST_DIR=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\Content\Paks\LogicMods\"
-set "RELEASE_DIR=%~dp0\Release\KwaNotificationsRelease\OblivionRemastered\Content\Paks\LogicMods\"
-set "RELEASE_DIR2=%~dp0\Release\KwaConfigPanelRelease\OblivionRemastered\Content\Paks\LogicMods\"
+set "RELEASE_DIR=%~dp0\..\Release\KwaNotificationsRelease\OblivionRemastered\Content\Paks\LogicMods\"
+set "RELEASE_DIR2=%~dp0\..\Release\KwaConfigPanelRelease\OblivionRemastered\Content\Paks\LogicMods\"
 :: Chunk name assignments
 set "PAKNAME=pakchunk279-Windows"
 set "RENAME=KwaConfigPanelBP_P"
@@ -20,20 +20,20 @@ set "PAKNAME_EXAMPLE=pakchunk38-Windows"
 set "RENAME_EXAMPLE=ExampleMod_P"
 
 :: Lua Main
-set "SOURCE_DIR_LUA=%~dp0\KwaNotifsFiles\"
-set "SOURCE_DIR_LUA2=%~dp0\KwaConfigPanelFiles\"
+set "SOURCE_DIR_LUA=%~dp0\..\KwaNotifsFiles\"
+set "SOURCE_DIR_LUA2=%~dp0\..\KwaConfigPanelFiles\"
 
 set "LUA_NAME=main.lua"
 set "LUA_NAME2=ConfigPanelHelpers.lua"
 :: Lua Mod Directory
 set "DEST_DIR_LUA=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\Binaries\Win64\ue4ss\mods\KwaNotificationsLua\Scripts"
-set "RELEASE_DIR_LUA=%~dp0\Release\KwaNotificationsRelease\OblivionRemastered\Binaries\Win64\ue4ss\mods\KwaNotificationsLua\Scripts"
+set "RELEASE_DIR_LUA=%~dp0\..\Release\KwaNotificationsRelease\OblivionRemastered\Binaries\Win64\ue4ss\mods\KwaNotificationsLua\Scripts"
 
 set "DEST_DIR_LUA2=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\Binaries\Win64\ue4ss\mods\ExampleConfigModLua\Scripts"
-set "RELEASE_DIR_LUA2=%~dp0\Release\ExampleConfigModLua\OblivionRemastered\Binaries\Win64\ue4ss\mods\ExampleConfigModLua\Scripts"
+set "RELEASE_DIR_LUA2=%~dp0\..\Release\ExampleConfigModLua\OblivionRemastered\Binaries\Win64\ue4ss\mods\ExampleConfigModLua\Scripts"
 
 set "DEST_DIR_LUA3=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\Binaries\Win64\ue4ss\mods\shared\KwaHelpers"
-set "RELEASE_DIR_LUA3=%~dp0\Release\KwaConfigPanelRelease\OblivionRemastered\Binaries\Win64\ue4ss\mods\shared\KwaHelpers"
+set "RELEASE_DIR_LUA3=%~dp0\..\Release\KwaConfigPanelRelease\OblivionRemastered\Binaries\Win64\ue4ss\mods\shared\KwaHelpers"
 
 :: Copy to dest dir
 if not exist "%DEST_DIR%\%RENAME%" (

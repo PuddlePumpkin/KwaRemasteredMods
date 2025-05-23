@@ -10,7 +10,7 @@ if %errorlevel% equ 0 (
 echo:
 echo Installing files...
 
-CALL %~dp0/install.bat
+CALL "%~dp0/install.bat"
 
 endlocal
 
