@@ -29,6 +29,14 @@ RegisterMod("LuaExampleMod", true, false, function(modPanel)
     -- StringArray parameter, callback returns the table of strings that are entered
     AddRowStringList(modPanel, "My String List", "MyStringListID")
 
+    -- Number Input | label, uniqueIdentifier, defaultValue, minValue, maxValue, minSlider, maxSlider, fractionalDigits
+    -- Float parameter, callback returns the number value
+    AddRowNumber(modPanel, "Example Number Input", "NumberInputExampleID")
+
+    -- String Input | label, uniqueIdentifier, hintText, defaultString
+    -- String parameter, callback returns the string value
+    AddRowString(modPanel, "Example String Input", "StringInputExampleID")
+
     -- Button row | buttonOneLabel, buttonTwoLabel, uniqueIdentifier, showSecondButton
     -- Int parameter, callback returns the index of the button pressed
     AddRowButtons(modPanel, "Button 1", "Button 2", "ActionButtonsID", true)
@@ -49,6 +57,12 @@ RegisterMod("LuaExampleMod", true, false, function(modPanel)
     end)
     RegisterCallback(modPanel, "MyStringListID", function(value)
         print("Successfully heard callback: " .. table.concat(value, ", "))
+    end)
+    RegisterCallback(modPanel, "NumberInputExampleID", function(value)
+        print("Successfully heard callback (Number): " .. tostring(value))
+    end)
+    RegisterCallback(modPanel, "StringInputExampleID", function(value)
+        print("Successfully heard callback (String): " .. tostring(value))
     end)
     RegisterCallback(modPanel, "ActionButtonsID", function(value)
         print("Successfully heard callback, Button pressed: " .. tostring(value))

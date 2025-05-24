@@ -199,6 +199,62 @@ function AddRowStringList(modPanel, label, uniqueIdentifier, height)
 end
 
 -- -------------------------------------------------------
+-- Number Input
+-- -------------------------------------------------------
+---@param modPanel table The mod configuration panel
+---@param label string Label text for the number input
+---@param uniqueIdentifier string Unique identifier for saving the value
+---@param defaultValue? number Default value (default: 0)
+---@param minValue? number Minimum value (default: 0)
+---@param maxValue? number Maximum value (default: 0)
+---@param minSlider? number Minimum value for the slider (default: 0)
+---@param maxSlider? number Maximum value for the slider (default: 0)
+---@param fractionalDigits? integer Number of fractional digits (default: 2)
+function AddRowNumber(modPanel, label, uniqueIdentifier, defaultValue, minValue, maxValue, minSlider, maxSlider, fractionalDigits)
+    if not modPanel or not modPanel:IsValid() then
+        error("[KCnfg] AddRowNumber: modPanel is nil or invalid")
+        return
+    end
+    local ReturnValue = {}
+    modPanel:AddRowNumber(
+        FText(label),
+        FName(uniqueIdentifier),
+        defaultValue or 0,
+        minValue or 0,
+        maxValue or 0,
+        minSlider or 0,
+        maxSlider or 0,
+        fractionalDigits or 2,
+        ReturnValue
+    )
+    SetupFloatCallbackHook() -- It's a number (float) type parameter
+end
+
+-- -------------------------------------------------------
+-- String Input
+-- -------------------------------------------------------
+---@param modPanel table The mod configuration panel
+---@param label string Label text for the string input
+---@param uniqueIdentifier string Unique identifier for saving the value
+---@param hintText? string Hint text for the input field (default: "Enter Text")
+---@param defaultString? string Default string value (default: "")
+function AddRowString(modPanel, label, uniqueIdentifier, hintText, defaultString)
+    if not modPanel or not modPanel:IsValid() then
+        error("[KCnfg] AddRowString: modPanel is nil or invalid")
+        return
+    end
+    local ReturnValue = {}
+    modPanel:AddRowString(
+        FText(label),
+        FName(uniqueIdentifier),
+        FText(hintText or "Enter Text"),
+        FString(defaultString or ""),
+        ReturnValue
+    )
+    SetupStringCallbackHook() -- It's a string type parameter
+end
+
+-- -------------------------------------------------------
 -- Buttons Row
 -- -------------------------------------------------------
 ---@param modPanel table The mod configuration panel
