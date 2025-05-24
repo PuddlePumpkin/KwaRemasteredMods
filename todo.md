@@ -4,7 +4,6 @@
 
 ## Config Panel:
 ### Blueprint:
-fix u.s.l
 ### Lua:
 
 ---
