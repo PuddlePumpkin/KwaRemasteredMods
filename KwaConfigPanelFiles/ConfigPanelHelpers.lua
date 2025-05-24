@@ -99,7 +99,7 @@ end
 ---@param decimalCount? number Number of decimal places (default: 0)
 ---@param bDoSnapSlider? boolean Whether to snap to increments (default: false)
 ---@param snapSize? number Size of snap increments (default: 1)
-function AddRowSlider(modPanel, label, uniqueIdentifier, minValue, maxValue, defaultValue, numberSuffix, decimalCount, bDoSnapSlider, snapSize)
+function AddRowSlider(modPanel, label, uniqueIdentifier, defaultValue, minValue, maxValue, numberSuffix, decimalCount, bDoSnapSlider, snapSize)
     if not modPanel or not modPanel:IsValid() then
         error("[KCnfg] AddRowSlider: modPanel is nil or invalid")
         return
@@ -108,9 +108,9 @@ function AddRowSlider(modPanel, label, uniqueIdentifier, minValue, maxValue, def
     modPanel:AddRowSlider(
         FText(label),
         FName(uniqueIdentifier),
+        defaultValue or (minValue or 0),
         minValue or 0,
         maxValue or 1,
-        defaultValue or (minValue or 0),
         FText(numberSuffix or ""),
         decimalCount or 0,
         bDoSnapSlider or false,

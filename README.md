@@ -13,12 +13,6 @@ This project is **NOT** associated with Bethesda, Zenimax, Virtuos or any of the
 *   **[Kwa Notifications](Docs/NotifsReadme.md)**: A replacement for the base notification system. Featuring stacking notifications, debug printing, and integrated with Kwa Configs to add options for appearance. [On Nexus 🗺️](https://www.nexusmods.com/oblivionremastered/mods/2697)
 ![Preview Gif](Docs/KwaNotifs.gif)
 
-**Credits**  
-* **Kein UHT SDK Dump**  
-↳ [github.com/Kein/Altar](https://github.com/Kein/Altar)  
-* **UE4SS**  
-↳ [github.com/UE4SS-RE/RE-UE4SS](https://github.com/UE4SS-RE/RE-UE4SS)
-
 ### Unreal Project Structure
 
 Blueprint mods are primarily located within the `Content/Mods/` directory:
@@ -28,3 +22,10 @@ Blueprint mods are primarily located within the `Content/Mods/` directory:
 *   `Content/Mods/KwaNotificationsBP_P`
 
 Other content directories contain dummy assets that are not included in the final packaged mods.
+
+### Credits  
+* **Kein UHT SDK Dump**  
+↳ [github.com/Kein/Altar](https://github.com/Kein/Altar)  
+* **UE4SS**  
+↳ [github.com/UE4SS-RE/RE-UE4SS](https://github.com/UE4SS-RE/RE-UE4SS)
+
