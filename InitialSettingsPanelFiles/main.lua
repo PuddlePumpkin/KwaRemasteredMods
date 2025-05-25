@@ -1665,38 +1665,6 @@ else
             end)
 
             --------------------------------------------------------------------------------
-            -- Fast Travel
-            --------------------------------------------------------------------------------
-            AddRowSeparator(modPanel)
-            AddRowSectionHeader(modPanel, "Fast Travel")
-            AddRowSeparator(modPanel)
-
-            AddRowBoolSwitch(modPanel, "Enable Fast Transition", "EnableFastTransition", false)
-            RegisterCallback(modPanel, "EnableFastTransition", function(value)
-                applySetting("bIsFastTransitionEnabled", value)
-            end)
-
-            AddRowBoolSwitch(modPanel, "Enable Fast Transition Injected Worlds", "FastTransitionInjectedWorlds", false)
-            RegisterCallback(modPanel, "FastTransitionInjectedWorlds", function(value)
-                applySetting("bEnableFastTransitionInjectedWorlds", value)
-            end)
-
-            AddRowBoolSwitch(modPanel, "Enable Fast Transition Parent Non World Partition", "FastTransitionParentNonPartition", false)
-            RegisterCallback(modPanel, "EnableFastTransitionParentNonWorldPartition", function(value)
-                applySetting("bEnableFastTransitionParentNonWorldPartition", value)
-            end)
-
-            AddRowBoolSwitch(modPanel, "Enable Fast Transition Preload Houses", "FastTransitionPreloadHouses", false)
-            RegisterCallback(modPanel, "FastTransitionPreloadHouses", function(value)
-                applySetting("bEnableFastTransitionPreLoadHouses", value)
-            end)
-
-            AddRowNumber(modPanel, "Max Fast Transition Unload Cache Size", "FastTransitionCacheSize", 3, nil, nil, nil, nil, 0)
-            RegisterCallback(modPanel, "FastTransitionCacheSize", function(value)
-                applySetting("MaxFastTransitionUnloadCacheSize", value)
-            end)
-
-            --------------------------------------------------------------------------------
             -- Threat System
             --------------------------------------------------------------------------------
             AddRowSeparator(modPanel)
