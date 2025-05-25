@@ -5,99 +5,119 @@ setlocal enabledelayedexpansion
 :: DEFINE THESE 
 :: Your built blueprint mod pak folder
 set "SOURCE_DIR=%~dp0\..\Windows\OblivionRemastered\Content\Paks"
-:: Your Oblivion LogicMods Directory
-set "DEST_DIR=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\Content\Paks\LogicMods\"
-set "RELEASE_DIR=%~dp0\..\Release\KwaNotificationsRelease\OblivionRemastered\Content\Paks\LogicMods\"
-set "RELEASE_DIR2=%~dp0\..\Release\KwaConfigPanelRelease\OblivionRemastered\Content\Paks\LogicMods\"
+:: Your Oblivion LogicMods Directory base path
+set "DEST_BASE_DIR=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\"
+set "DEST_PAKS_DIR=%DEST_BASE_DIR%Content\Paks\LogicMods\"
+:: Release base path
+set "RELEASE_BASE_DIR=%~dp0\..\Release\"
+
 :: Chunk name assignments
-set "PAKNAME=pakchunk279-Windows"
-set "RENAME=KwaConfigPanelBP_P"
-set "PAKNAME2=pakchunk248-Windows"
-set "RENAME2=KwaNotificationsBP_P"
+set "PAKNAME_CP=pakchunk279-Windows"
+set "RENAME_CP=KwaConfigPanelBP_P"
+set "PAKNAME_KN=pakchunk248-Windows"
+set "RENAME_KN=KwaNotificationsBP_P"
 
 :: New mod setup: ExampleMod_P
-set "PAKNAME_EXAMPLE=pakchunk38-Windows"
-set "RENAME_EXAMPLE=ExampleMod_P"
+set "PAKNAME_EX=pakchunk38-Windows"
+set "RENAME_EX=ExampleMod_P"
 
-:: Lua Main
-set "SOURCE_DIR_LUA=%~dp0\..\KwaNotifsFiles\"
-set "SOURCE_DIR_LUA2=%~dp0\..\KwaConfigPanelFiles\"
+:: Lua Source Directories
+set "SOURCE_DIR_LUA_KN=%~dp0\..\KwaNotifsFiles\"
+set "SOURCE_DIR_LUA_CP=%~dp0\..\KwaConfigPanelFiles\"
+set "SOURCE_DIR_LUA_IS=%~dp0\..\InitialSettingsPanelFiles\"
 
-set "LUA_NAME=main.lua"
-set "LUA_NAME2=ConfigPanelHelpers.lua"
-:: Lua Mod Directory
-set "DEST_DIR_LUA=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\Binaries\Win64\ue4ss\mods\KwaNotificationsLua\Scripts"
-set "RELEASE_DIR_LUA=%~dp0\..\Release\KwaNotificationsRelease\OblivionRemastered\Binaries\Win64\ue4ss\mods\KwaNotificationsLua\Scripts"
+:: Lua File Names
+set "LUA_NAME_MAIN=main.lua"
+set "LUA_NAME_HELPERS=ConfigPanelHelpers.lua"
 
-set "DEST_DIR_LUA2=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\Binaries\Win64\ue4ss\mods\ExampleConfigModLua\Scripts"
-set "RELEASE_DIR_LUA2=%~dp0\..\Release\ExampleConfigModLua\OblivionRemastered\Binaries\Win64\ue4ss\mods\ExampleConfigModLua\Scripts"
+:: Lua Destination Directories (Install)
+set "DEST_UE4SS_MODS=%DEST_BASE_DIR%Binaries\Win64\ue4ss\mods\"
+set "DEST_DIR_LUA_KN=%DEST_UE4SS_MODS%KwaNotificationsLua\Scripts"
+set "DEST_DIR_LUA_EX=%DEST_UE4SS_MODS%ExampleConfigModLua\Scripts"
+set "DEST_DIR_LUA_SHARED=%DEST_UE4SS_MODS%shared\KwaHelpers"
+set "DEST_DIR_LUA_IS=%DEST_UE4SS_MODS%InitialSettingsPanel\Scripts"
 
-set "DEST_DIR_LUA3=C:\Program Files (x86)\Steam\steamapps\common\Oblivion Remastered\OblivionRemastered\Binaries\Win64\ue4ss\mods\shared\KwaHelpers"
-set "RELEASE_DIR_LUA3=%~dp0\..\Release\KwaConfigPanelRelease\OblivionRemastered\Binaries\Win64\ue4ss\mods\shared\KwaHelpers"
+:: Lua Destination Directories (Release)
+set "RELEASE_DIR_LUA_KN=%RELEASE_BASE_DIR%KwaNotificationsRelease\OblivionRemastered\Binaries\Win64\ue4ss\mods\KwaNotificationsLua\Scripts"
+set "RELEASE_DIR_LUA_EX=%RELEASE_BASE_DIR%ExampleConfigModLua\OblivionRemastered\Binaries\Win64\ue4ss\mods\ExampleConfigModLua\Scripts"
+set "RELEASE_DIR_LUA_SHARED=%RELEASE_BASE_DIR%KwaConfigPanelRelease\OblivionRemastered\Binaries\Win64\ue4ss\mods\shared\KwaHelpers"
+set "RELEASE_DIR_LUA_IS=%RELEASE_BASE_DIR%InitialSettingsPanelRelease\OblivionRemastered\Binaries\Win64\ue4ss\mods\InitialSettingsPanel\Scripts"
 
-:: Copy to dest dir
-if not exist "%DEST_DIR%\%RENAME%" (
-    mkdir "%DEST_DIR%\%RENAME%"
+:: Create LogicMods Directories (Install)
+if not exist "%DEST_PAKS_DIR%%RENAME_CP%" (
+    mkdir "%DEST_PAKS_DIR%%RENAME_CP%"
 )
-if not exist "%DEST_DIR%\%RENAME2%" (
-    mkdir "%DEST_DIR%\%RENAME2%"
+if not exist "%DEST_PAKS_DIR%%RENAME_KN%" (
+    mkdir "%DEST_PAKS_DIR%%RENAME_KN%"
 )
-if not exist "%DEST_DIR%\%RENAME_EXAMPLE%" (
-    mkdir "%DEST_DIR%\%RENAME_EXAMPLE%"
-)
-copy "%SOURCE_DIR%\%PAKNAME%.pak" "%DEST_DIR%\%RENAME%\%RENAME%.pak"
-copy "%SOURCE_DIR%\%PAKNAME%.ucas" "%DEST_DIR%\%RENAME%\%RENAME%.ucas"
-copy "%SOURCE_DIR%\%PAKNAME%.utoc" "%DEST_DIR%\%RENAME%\%RENAME%.utoc"
-copy "%SOURCE_DIR%\%PAKNAME2%.pak" "%DEST_DIR%\%RENAME2%\%RENAME2%.pak"
-copy "%SOURCE_DIR%\%PAKNAME2%.ucas" "%DEST_DIR%\%RENAME2%\%RENAME2%.ucas"
-copy "%SOURCE_DIR%\%PAKNAME2%.utoc" "%DEST_DIR%\%RENAME2%\%RENAME2%.utoc"
-copy "%SOURCE_DIR%\%PAKNAME_EXAMPLE%.pak" "%DEST_DIR%\%RENAME_EXAMPLE%\%RENAME_EXAMPLE%.pak"
-copy "%SOURCE_DIR%\%PAKNAME_EXAMPLE%.ucas" "%DEST_DIR%\%RENAME_EXAMPLE%\%RENAME_EXAMPLE%.ucas"
-copy "%SOURCE_DIR%\%PAKNAME_EXAMPLE%.utoc" "%DEST_DIR%\%RENAME_EXAMPLE%\%RENAME_EXAMPLE%.utoc"
-
-:: Same to release
-if not exist "%RELEASE_DIR%\%RENAME%" (
-    mkdir "%RELEASE_DIR%\%RENAME%"
-)
-:: Same to release
-if not exist "%RELEASE_DIR2%\%RENAME2%" (
-    mkdir "%RELEASE_DIR2%\%RENAME2%"
+if not exist "%DEST_PAKS_DIR%%RENAME_EX%" (
+    mkdir "%DEST_PAKS_DIR%%RENAME_EX%"
 )
 
-copy "%SOURCE_DIR%\%PAKNAME%.pak" "%RELEASE_DIR%\%RENAME%\%RENAME%.pak"
-copy "%SOURCE_DIR%\%PAKNAME%.ucas" "%RELEASE_DIR%\%RENAME%\%RENAME%.ucas"
-copy "%SOURCE_DIR%\%PAKNAME%.utoc" "%RELEASE_DIR%\%RENAME%\%RENAME%.utoc"
-copy "%SOURCE_DIR%\%PAKNAME2%.pak" "%RELEASE_DIR2%\%RENAME2%\%RENAME2%.pak"
-copy "%SOURCE_DIR%\%PAKNAME2%.ucas" "%RELEASE_DIR2%\%RENAME2%\%RENAME2%.ucas"
-copy "%SOURCE_DIR%\%PAKNAME2%.utoc" "%RELEASE_DIR2%\%RENAME2%\%RENAME2%.utoc"
+:: Copy Pak files to Install Directory
+copy "%SOURCE_DIR%\%PAKNAME_CP%.pak" "%DEST_PAKS_DIR%%RENAME_CP%\%RENAME_CP%.pak"
+copy "%SOURCE_DIR%\%PAKNAME_CP%.ucas" "%DEST_PAKS_DIR%%RENAME_CP%\%RENAME_CP%.ucas"
+copy "%SOURCE_DIR%\%PAKNAME_CP%.utoc" "%DEST_PAKS_DIR%%RENAME_CP%\%RENAME_CP%.utoc"
+copy "%SOURCE_DIR%\%PAKNAME_KN%.pak" "%DEST_PAKS_DIR%%RENAME_KN%\%RENAME_KN%.pak"
+copy "%SOURCE_DIR%\%PAKNAME_KN%.ucas" "%DEST_PAKS_DIR%%RENAME_KN%\%RENAME_KN%.ucas"
+copy "%SOURCE_DIR%\%PAKNAME_KN%.utoc" "%DEST_PAKS_DIR%%RENAME_KN%\%RENAME_KN%.utoc"
+copy "%SOURCE_DIR%\%PAKNAME_EX%.pak" "%DEST_PAKS_DIR%%RENAME_EX%\%RENAME_EX%.pak"
+copy "%SOURCE_DIR%\%PAKNAME_EX%.ucas" "%DEST_PAKS_DIR%%RENAME_EX%\%RENAME_EX%.ucas"
+copy "%SOURCE_DIR%\%PAKNAME_EX%.utoc" "%DEST_PAKS_DIR%%RENAME_EX%\%RENAME_EX%.utoc"
 
-
-if not exist "%DEST_DIR_LUA%" (
-    mkdir "%DEST_DIR_LUA%"
+:: Create Release Directories (LogicMods)
+if not exist "%RELEASE_BASE_DIR%KwaNotificationsRelease\OblivionRemastered\Content\Paks\LogicMods\%RENAME_CP%" (
+    mkdir "%RELEASE_BASE_DIR%KwaNotificationsRelease\OblivionRemastered\Content\Paks\LogicMods\%RENAME_CP%"
 )
-if not exist "%DEST_DIR_LUA2%" (
-    mkdir "%DEST_DIR_LUA2%"
-)
-if not exist "%DEST_DIR_LUA3%" (
-    mkdir "%DEST_DIR_LUA3%"
-)
-if not exist "%RELEASE_DIR_LUA%" (
-    mkdir "%RELEASE_DIR_LUA%"
-)
-if not exist "%RELEASE_DIR_LUA2%" (
-    mkdir "%RELEASE_DIR_LUA2%"
-)
-if not exist "%RELEASE_DIR_LUA3%" (
-    mkdir "%RELEASE_DIR_LUA3%"
+if not exist "%RELEASE_BASE_DIR%KwaConfigPanelRelease\OblivionRemastered\Content\Paks\LogicMods\%RENAME_KN%" (
+    mkdir "%RELEASE_BASE_DIR%KwaConfigPanelRelease\OblivionRemastered\Content\Paks\LogicMods\%RENAME_KN%"
 )
 
-:: Copy File
-copy "%SOURCE_DIR_LUA%\%LUA_NAME%" "%DEST_DIR_LUA%"
-copy "%SOURCE_DIR_LUA%\%LUA_NAME%" "%RELEASE_DIR_LUA%"
-copy "%SOURCE_DIR_LUA2%\%LUA_NAME%" "%DEST_DIR_LUA2%"
-copy "%SOURCE_DIR_LUA2%\%LUA_NAME%" "%RELEASE_DIR_LUA2%"
-copy "%SOURCE_DIR_LUA2%\%LUA_NAME2%" "%DEST_DIR_LUA3%"
-copy "%SOURCE_DIR_LUA2%\%LUA_NAME2%" "%RELEASE_DIR_LUA3%"
+:: Copy Pak files to Release Directory
+copy "%SOURCE_DIR%\%PAKNAME_CP%.pak" "%RELEASE_BASE_DIR%KwaNotificationsRelease\OblivionRemastered\Content\Paks\LogicMods\%RENAME_CP%\%RENAME_CP%.pak"
+copy "%SOURCE_DIR%\%PAKNAME_CP%.ucas" "%RELEASE_BASE_DIR%KwaNotificationsRelease\OblivionRemastered\Content\Paks\LogicMods\%RENAME_CP%\%RENAME_CP%.ucas"
+copy "%SOURCE_DIR%\%PAKNAME_CP%.utoc" "%RELEASE_BASE_DIR%KwaNotificationsRelease\OblivionRemastered\Content\Paks\LogicMods\%RENAME_CP%\%RENAME_CP%.utoc"
+copy "%SOURCE_DIR%\%PAKNAME_KN%.pak" "%RELEASE_BASE_DIR%KwaConfigPanelRelease\OblivionRemastered\Content\Paks\LogicMods\%RENAME_KN%\%RENAME_KN%.pak"
+copy "%SOURCE_DIR%\%PAKNAME_KN%.ucas" "%RELEASE_BASE_DIR%KwaConfigPanelRelease\OblivionRemastered\Content\Paks\LogicMods\%RENAME_KN%\%RENAME_KN%.ucas"
+copy "%SOURCE_DIR%\%PAKNAME_KN%.utoc" "%RELEASE_BASE_DIR%KwaConfigPanelRelease\OblivionRemastered\Content\Paks\LogicMods\%RENAME_KN%\%RENAME_KN%.utoc"
+
+:: Create Lua Directories (Install)
+if not exist "%DEST_DIR_LUA_KN%" (
+    mkdir "%DEST_DIR_LUA_KN%"
+)
+if not exist "%DEST_DIR_LUA_EX%" (
+    mkdir "%DEST_DIR_LUA_EX%"
+)
+if not exist "%DEST_DIR_LUA_SHARED%" (
+    mkdir "%DEST_DIR_LUA_SHARED%"
+)
+if not exist "%DEST_DIR_LUA_IS%" (
+    mkdir "%DEST_DIR_LUA_IS%"
+)
+
+:: Create Lua Directories (Release)
+if not exist "%RELEASE_DIR_LUA_KN%" (
+    mkdir "%RELEASE_DIR_LUA_KN%"
+)
+if not exist "%RELEASE_DIR_LUA_EX%" (
+    mkdir "%RELEASE_DIR_LUA_EX%"
+)
+if not exist "%RELEASE_DIR_LUA_SHARED%" (
+    mkdir "%RELEASE_DIR_LUA_SHARED%"
+)
+if not exist "%RELEASE_DIR_LUA_IS%" (
+    mkdir "%RELEASE_DIR_LUA_IS%"
+)
+
+:: Copy Lua Files to Install and Release Directories
+copy "%SOURCE_DIR_LUA_KN%\%LUA_NAME_MAIN%" "%DEST_DIR_LUA_KN%"
+copy "%SOURCE_DIR_LUA_KN%\%LUA_NAME_MAIN%" "%RELEASE_DIR_LUA_KN%"
+copy "%SOURCE_DIR_LUA_CP%\%LUA_NAME_MAIN%" "%DEST_DIR_LUA_EX%"
+copy "%SOURCE_DIR_LUA_CP%\%LUA_NAME_MAIN%" "%RELEASE_DIR_LUA_EX%"
+copy "%SOURCE_DIR_LUA_CP%\%LUA_NAME_HELPERS%" "%DEST_DIR_LUA_SHARED%"
+copy "%SOURCE_DIR_LUA_CP%\%LUA_NAME_HELPERS%" "%RELEASE_DIR_LUA_SHARED%"
+copy "%SOURCE_DIR_LUA_IS%\%LUA_NAME_MAIN%" "%DEST_DIR_LUA_IS%"
+copy "%SOURCE_DIR_LUA_IS%\%LUA_NAME_MAIN%" "%RELEASE_DIR_LUA_IS%"
 echo Files Copied!
 
 
