@@ -23,7 +23,7 @@ else
             local settingsInstance = SettingsCDO.GetOblivionInitialSettings()
             if settingsInstance and settingsInstance:IsValid() then
                 -- Handle integer properties by converting the value
-                if type(value) == 'number' and (propertyName == "TeleportMaxIterationCount" or propertyName == "ArrowInventoryChancePercentOnTargetHit" or propertyName == "BarBlinkAnimLoopNum" or propertyName == "NewFormulaFatigueMult" or string.find(propertyName, "ThreatLevelOffset") or string.find(propertyName, "PerkMercantile") or propertyName == "LowThreatLevelOffset" or propertyName == "MediumThreatLevelOffset" or propertyName == "HighThreatLevelOffset") then
+                if type(value) == 'number' and (propertyName == "TeleportMaxIterationCount" or propertyName == "ArrowInventoryChancePercentOnTargetHit" or propertyName == "BarBlinkAnimLoopNum" or propertyName == "NewFormulaFatigueMult" or string.find(propertyName, "ThreatLevelOffset") or string.find(propertyName, "PerkMercantile") or string.find(propertyName, "LowThreatLevelOffset") or string.find(propertyName, "MediumThreatLevelOffset") or string.find(propertyName, "HighThreatLevelOffset")) then
                     settingsInstance[propertyName] = math.floor(value)
                 else
                     settingsInstance[propertyName] = value
@@ -43,12 +43,39 @@ else
             --------------------------------------------------------------------------------
             -- Oblivion Settings
             --------------------------------------------------------------------------------
+            AddRowSeparator(modPanel)
             AddRowSectionHeader(modPanel, "Oblivion Settings")
             AddRowSeparator(modPanel)
 
             AddRowBoolSwitch(modPanel, "Enable God Mode", "GodModeEnabled", false)
             RegisterCallback(modPanel, "GodModeEnabled", function(value)
                  applySetting("bIsGodMode", value)
+            end)
+
+            -- Add missing Oblivion Settings
+            AddRowBoolSwitch(modPanel, "Use Pre-Placed Datatable", "UsePrePlacedDatatable", true)
+            RegisterCallback(modPanel, "UsePrePlacedDatatable", function(value)
+                applySetting("bIsUsingPrePlacedDatatable", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Save Pre-Placed Datatable", "SavePrePlacedDatatable", false)
+            RegisterCallback(modPanel, "SavePrePlacedDatatable", function(value)
+                applySetting("bIsSavingPrePlacedDatatable", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Environment Luminance Value Paired", "EnvLuminancePaired", true)
+            RegisterCallback(modPanel, "EnvLuminancePaired", function(value)
+                applySetting("bIsEnvironmentLuminanceValuePairedFromOblivion", value)
+            end)
+            AddRowNumber(modPanel, "Environment Luminance Update Frequency", "EnvLuminanceUpdateFreq", 2.00)
+            RegisterCallback(modPanel, "EnvLuminanceUpdateFreq", function(value)
+                applySetting("EnvironmentLuminanceValueUpdateFrequency", value)
+            end)
+            AddRowString(modPanel, "Main World Level Name", "MainWorldLevelName", "Enter Level Name", "Tamriel")
+            RegisterCallback(modPanel, "MainWorldLevelName", function(value)
+                applySetting("MainWorldLevelName", FName(value))
+            end)
+            AddRowString(modPanel, "Altar VS Map Path", "AltarVSMapPath", "Enter Map Path", "/Game/Maps/VerticalSlice/")
+            RegisterCallback(modPanel, "AltarVSMapPath", function(value)
+                applySetting("AltarVSMapPath", value)
             end)
 
             --------------------------------------------------------------------------------
@@ -130,6 +157,95 @@ else
                 applySetting("bUseOblivionLikeWalkingPhysics", value)
             end)
 
+            -- Add missing Physics Settings
+            AddRowBoolSwitch(modPanel, "Use Fake Root Location Interpolation", "UseFakeRootInterp", false)
+            RegisterCallback(modPanel, "UseFakeRootInterp", function(value)
+                applySetting("bDefaultUseFakeRootLocationInterpolation", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Interpolate Fake Root for Humanoids", "InterpFakeRootHumanoids", true)
+            RegisterCallback(modPanel, "InterpFakeRootHumanoids", function(value)
+                applySetting("bDefaultInterpolateFakeRootForHumanoids", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Interpolate Fake Root for Creatures", "InterpFakeRootCreatures", true)
+            RegisterCallback(modPanel, "InterpFakeRootCreatures", function(value)
+                applySetting("bDefaultInterpolateFakeRootForCreatures", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Interpolate Fake Root Only Z Axis", "InterpFakeRootOnlyZ", true)
+            RegisterCallback(modPanel, "InterpFakeRootOnlyZ", function(value)
+                applySetting("bDefaultInterpolateFakeRootOnlyZAxis", value)
+            end)
+            AddRowNumber(modPanel, "Max Fake Root Distance From Capsule", "MaxFakeRootDist", 100.00)
+            RegisterCallback(modPanel, "MaxFakeRootDist", function(value)
+                applySetting("DefaultMaxFakeRootDistanceFromCapsule", value)
+            end)
+            AddRowNumber(modPanel, "Time to Rejoin Root When Stopping Fake Root Interp", "TimeToRejoinRoot", 0.35)
+            RegisterCallback(modPanel, "TimeToRejoinRoot", function(value)
+                applySetting("DefaultTimeToRejoinRootWhenStoppingFakeRootInterp", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Use Flat Base for Floor Checks", "UseFlatBaseFloorChecks", false)
+            RegisterCallback(modPanel, "UseFlatBaseFloorChecks", function(value)
+                applySetting("bDefaultUseFlatBaseForFloorChecks", value)
+            end)
+            AddRowNumber(modPanel, "Max Slope Angle for Non-Eligible Floors", "MaxSlopeAngleNonEligible", 70.00)
+            RegisterCallback(modPanel, "MaxSlopeAngleNonEligible", function(value)
+                applySetting("DefaultMaxSlopeAngleForFloorsNotEligibleForAntiClimbing", value)
+            end)
+            AddRowNumber(modPanel, "Min Slope Anti-Climbing Activation Angle", "MinSlopeAntiClimbing", 0.00)
+            RegisterCallback(modPanel, "MinSlopeAntiClimbing", function(value)
+                applySetting("DefaultMinSlopeAntiClimbingActivationAngle", value)
+            end)
+            AddRowNumber(modPanel, "Max Slope Anti-Climbing Activation Angle", "MaxSlopeAntiClimbing", 60.00)
+            RegisterCallback(modPanel, "MaxSlopeAntiClimbing", function(value)
+                applySetting("DefaultMaxSlopeAntiClimbingActivationAngle", value)
+            end)
+            AddRowNumber(modPanel, "Slope Angle Threshold to Use Directional Anti-Climbing", "SlopeAngleThreshold", 60.00)
+            RegisterCallback(modPanel, "SlopeAngleThreshold", function(value)
+                applySetting("DefaultSlopeAngleThresholdToUseDirectionalAntiClimbing", value)
+            end)
+            AddRowNumber(modPanel, "Max Slope Angle Before Slide", "MaxSlopeBeforeSlide", 85.00)
+            RegisterCallback(modPanel, "MaxSlopeBeforeSlide", function(value)
+                applySetting("DefaultMaxSlopeAngleBeforeSlide", value)
+            end)
+            AddRowNumber(modPanel, "Min Jump Off Slope Angle", "MinJumpOffSlopeAngle", 65.00)
+            RegisterCallback(modPanel, "MinJumpOffSlopeAngle", function(value)
+                applySetting("DefaultMinJumpOffSlopeAngle", value)
+            end)
+            AddRowNumber(modPanel, "Min Jump Off Slope Velocity", "MinJumpOffSlopeVelocity", 200.00)
+            RegisterCallback(modPanel, "MinJumpOffSlopeVelocity", function(value)
+                applySetting("DefaultMinJumpOffSlopeVelocity", value)
+            end)
+            AddRowNumber(modPanel, "Min Anti-Climbing Factor", "MinAntiClimbingFactor", 0.00)
+            RegisterCallback(modPanel, "MinAntiClimbingFactor", function(value)
+                applySetting("DefaultMinAntiClimbingFactor", value)
+            end)
+            AddRowNumber(modPanel, "Max Anti-Climbing Factor", "MaxAntiClimbingFactor", 1.00)
+            RegisterCallback(modPanel, "MaxAntiClimbingFactor", function(value)
+                applySetting("DefaultMaxAntiClimbingFactor", value)
+            end)
+            AddRowNumber(modPanel, "Min Velocity Smoothing Speed", "MinVelocitySmoothing", 2000.00)
+            RegisterCallback(modPanel, "MinVelocitySmoothing", function(value)
+                applySetting("DefaultMinVelocitySmoothingSpeed", value)
+            end)
+            AddRowNumber(modPanel, "Max Velocity Smoothing Speed", "MaxVelocitySmoothing", 6000.00)
+            RegisterCallback(modPanel, "MaxVelocitySmoothing", function(value)
+                applySetting("DefaultMaxVelocitySmoothingSpeed", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Cap Upward Velocity At Max Slope Angle", "CapUpwardVelocity", true)
+            RegisterCallback(modPanel, "CapUpwardVelocity", function(value)
+                applySetting("bDefaultCapUpwardVelocityAtMaxSlopeAngle", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Prevent Jump On Stiff Slopes", "PreventJumpStiffSlopes", true)
+            RegisterCallback(modPanel, "PreventJumpStiffSlopes", function(value)
+                applySetting("bDefaultPreventJumpOnStiffSlopes", value)
+            end)
+            AddRowNumber(modPanel, "Prevent Jump Min Slope Angle", "PreventJumpMinSlopeAngle", 60.00)
+            RegisterCallback(modPanel, "PreventJumpMinSlopeAngle", function(value)
+                applySetting("DefaultPreventJumpMinSlopeAngle", value)
+            end)
+
+            --------------------------------------------------------------------------------
+            -- Physics: Fall Damage
+            --------------------------------------------------------------------------------
             AddRowSeparator(modPanel)
             AddRowSectionHeader(modPanel, "Physics: Fall Damage")
             AddRowSeparator(modPanel)
@@ -296,8 +412,29 @@ else
                 applySetting("OblivionToAltarKnockdownForceMultiplier", value)
             end)
 
-            AddRowNumber(modPanel, "Combat AI Hold Time Multiplier", "CombatAIHoldTimeMultiplier", 1.00)
-            RegisterCallback(modPanel, "CombatAIHoldTimeMultiplier", function(value)
+            -- Add missing Combat Settings
+            AddRowBoolSwitch(modPanel, "Enable Player Combat Hit Trace Debug Draw", "EnableCombatDebugDraw", false)
+            RegisterCallback(modPanel, "EnableCombatDebugDraw", function(value)
+                applySetting("bEnablePlayerCombatHitTraceDebugDraw", value)
+            end)
+            AddRowNumber(modPanel, "Player Combat Hit Trace Debug Draw Duration", "CombatDebugDrawDuration", 5.00)
+            RegisterCallback(modPanel, "CombatDebugDrawDuration", function(value)
+                applySetting("PlayerCombatHitTraceDebugDrawDuration", value)
+            end)
+            AddRowNumber(modPanel, "Time Between Two Warning Border Region", "TimeBetweenBorderWarning", 5.00)
+            RegisterCallback(modPanel, "TimeBetweenBorderWarning", function(value)
+                applySetting("TimeBetweenTwoWarningBorderRegion", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Debug Display Pushback On Screen", "DebugDisplayPushback", false)
+            RegisterCallback(modPanel, "DebugDisplayPushback", function(value)
+                applySetting("bDebugDisplayPushbackOnScreen", value)
+            end)
+            AddRowNumber(modPanel, "Debug Override Pushback Force", "DebugOverridePushback", -1.00)
+            RegisterCallback(modPanel, "DebugOverridePushback", function(value)
+                applySetting("DebugOverridePushbackForce", value)
+            end)
+            AddRowNumber(modPanel, "Combat AI Hold Time Multiplier", "CombatAIHoldTimeMult", 1.00)
+            RegisterCallback(modPanel, "CombatAIHoldTimeMult", function(value)
                 applySetting("CombatAIHoldTimeMultiplier", value)
             end)
 
@@ -446,6 +583,71 @@ else
             AddRowNumber(modPanel, "Default Move Sprint Fatigue Regen Delay", "DefaultMoveSprintFatigueRegenDelay", 3.00)
             RegisterCallback(modPanel, "DefaultMoveSprintFatigueRegenDelay", function(value)
                 applySetting("DefaultMoveSprintFatigueRegenDelay", value)
+            end)
+
+            --------------------------------------------------------------------------------
+            -- Horse Movement
+            --------------------------------------------------------------------------------
+            AddRowSeparator(modPanel)
+            AddRowSectionHeader(modPanel, "Horse Movement")
+            AddRowSeparator(modPanel)
+
+            -- Add Horse Movement Settings
+            AddRowNumber(modPanel, "Horse Max Slope Angle for Non-Eligible Floors", "HorseMaxSlopeAngleNonEligible", 70.00)
+            RegisterCallback(modPanel, "HorseMaxSlopeAngleNonEligible", function(value)
+                applySetting("HorseDefaultMaxSlopeAngleForFloorsNotEligibleForAntiClimbing", value)
+            end)
+            AddRowNumber(modPanel, "Horse Min Slope Anti-Climbing Activation Angle", "HorseMinSlopeAntiClimbing", 0.00)
+            RegisterCallback(modPanel, "HorseMinSlopeAntiClimbing", function(value)
+                applySetting("HorseDefaultMinSlopeAntiClimbingActivationAngle", value)
+            end)
+            AddRowNumber(modPanel, "Horse Max Slope Anti-Climbing Activation Angle", "HorseMaxSlopeAntiClimbing", 60.00)
+            RegisterCallback(modPanel, "HorseMaxSlopeAntiClimbing", function(value)
+                applySetting("HorseDefaultMaxSlopeAntiClimbingActivationAngle", value)
+            end)
+            AddRowNumber(modPanel, "Horse Slope Angle Threshold to Use Directional Anti-Climbing", "HorseSlopeAngleThreshold", 60.00)
+            RegisterCallback(modPanel, "HorseSlopeAngleThreshold", function(value)
+                applySetting("HorseDefaultSlopeAngleThresholdToUseDirectionalAntiClimbing", value)
+            end)
+            AddRowNumber(modPanel, "Horse Max Slope Angle Before Slide", "HorseMaxSlopeBeforeSlide", 85.00)
+            RegisterCallback(modPanel, "HorseMaxSlopeBeforeSlide", function(value)
+                applySetting("HorseDefaultMaxSlopeAngleBeforeSlide", value)
+            end)
+            AddRowNumber(modPanel, "Horse Min Jump Off Slope Angle", "HorseMinJumpOffSlopeAngle", 65.00)
+            RegisterCallback(modPanel, "HorseMinJumpOffSlopeAngle", function(value)
+                applySetting("HorseDefaultMinJumpOffSlopeAngle", value)
+            end)
+            AddRowNumber(modPanel, "Horse Min Jump Off Slope Velocity", "HorseMinJumpOffSlopeVelocity", 200.00)
+            RegisterCallback(modPanel, "HorseMinJumpOffSlopeVelocity", function(value)
+                applySetting("HorseDefaultMinJumpOffSlopeVelocity", value)
+            end)
+            AddRowNumber(modPanel, "Horse Min Anti-Climbing Factor", "HorseMinAntiClimbingFactor", 0.00)
+            RegisterCallback(modPanel, "HorseMinAntiClimbingFactor", function(value)
+                applySetting("HorseDefaultMinAntiClimbingFactor", value)
+            end)
+            AddRowNumber(modPanel, "Horse Max Anti-Climbing Factor", "HorseMaxAntiClimbingFactor", 1.00)
+            RegisterCallback(modPanel, "HorseMaxAntiClimbingFactor", function(value)
+                applySetting("HorseDefaultMaxAntiClimbingFactor", value)
+            end)
+            AddRowNumber(modPanel, "Horse Min Velocity Smoothing Speed", "HorseMinVelocitySmoothing", 500.00)
+            RegisterCallback(modPanel, "HorseMinVelocitySmoothing", function(value)
+                applySetting("HorseDefaultMinVelocitySmoothingSpeed", value)
+            end)
+            AddRowNumber(modPanel, "Horse Max Velocity Smoothing Speed", "HorseMaxVelocitySmoothing", 2000.00)
+            RegisterCallback(modPanel, "HorseMaxVelocitySmoothing", function(value)
+                applySetting("HorseDefaultMaxVelocitySmoothingSpeed", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Horse Cap Upward Velocity At Max Slope Angle", "HorseCapUpwardVelocity", true)
+            RegisterCallback(modPanel, "HorseCapUpwardVelocity", function(value)
+                applySetting("bHorseDefaultCapUpwardVelocityAtMaxSlopeAngle", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Horse Prevent Jump On Stiff Slopes", "HorsePreventJumpStiffSlopes", true)
+            RegisterCallback(modPanel, "HorsePreventJumpStiffSlopes", function(value)
+                applySetting("bHorseDefaultPreventJumpOnStiffSlopes", value)
+            end)
+            AddRowNumber(modPanel, "Horse Prevent Jump Min Slope Angle", "HorsePreventJumpMinSlopeAngle", 60.00)
+            RegisterCallback(modPanel, "HorsePreventJumpMinSlopeAngle", function(value)
+                applySetting("HorseDefaultPreventJumpMinSlopeAngle", value)
             end)
 
             --------------------------------------------------------------------------------
@@ -607,8 +809,8 @@ else
                 applySetting("WaitToStartReductionAnimDuration", value)
             end)
 
-            AddRowNumber(modPanel, "Bow Hold Minimum Completion", "BowHoldMinCompletion", 0.20)
-            RegisterCallback(modPanel, "BowHoldMinCompletion", function(value)
+            AddRowNumber(modPanel, "Bow Hold Minimum Completion", "BowHoldMinimumCompletion", 0.20)
+            RegisterCallback(modPanel, "BowHoldMinimumCompletion", function(value)
                 applySetting("BowHoldMinimumCompletion", value)
             end)
 
@@ -622,8 +824,8 @@ else
                 applySetting("ArrowWeakSpeedMultiplier", value)
             end)
 
-            AddRowNumber(modPanel, "Arrow Initial Speed Multiplier", "ArrowInitialSpeedMult", 5000.00)
-            RegisterCallback(modPanel, "ArrowInitialSpeedMult", function(value)
+            AddRowNumber(modPanel, "Arrow Initial Speed Multiplier", "ArrowInitialSpeedMultiplier", 5000.00)
+            RegisterCallback(modPanel, "ArrowInitialSpeedMultiplier", function(value)
                 applySetting("ArrowInitialSpeedMultiplier", value)
             end)
 
@@ -675,6 +877,76 @@ else
             AddRowNumber(modPanel, "Persuasion Percentage Reduction FOV", "PersuasionPercentageReductionFOV", 0.25)
             RegisterCallback(modPanel, "PersuasionPercentageReductionFOV", function(value)
                 applySetting("PersuasionPercentageReductionFOV", value)
+            end)
+
+            -- Add missing UI & Effects Settings
+            AddRowStringList(modPanel, "Agility Scaling Weapons File Names", "AgilityScalingWeapons", 250)
+            RegisterCallback(modPanel, "AgilityScalingWeapons", function(value)
+                applySetting("AgilityScalingWeaponsFileNames", value)
+            end)
+            AddRowNumber(modPanel, "Input Tag Buffering Default Time", "InputTagBufferingTime", 0.30)
+            RegisterCallback(modPanel, "InputTagBufferingTime", function(value)
+                applySetting("InputTagBufferingDefaultTime", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Does Oblivion Draw Capsule Colliders", "DrawCapsuleColliders", false)
+            RegisterCallback(modPanel, "DrawCapsuleColliders", function(value)
+                applySetting("bDoesOblivionDrawCapsuleColliders", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Does Oblivion Draw Grab Debug Display", "DrawGrabDebug", false)
+            RegisterCallback(modPanel, "DrawGrabDebug", function(value)
+                applySetting("bDoesOblivionDrawGrabDebugDisplay", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Does Oblivion Show Player Detection Lighting", "ShowDetectionLighting", false)
+            RegisterCallback(modPanel, "ShowDetectionLighting", function(value)
+                applySetting("bDoesOblivionShowPlayerDetectionLighting", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Does Oblivion Output Save Game Debug Info On Saving", "OutputSaveDebugInfoSaving", false)
+            RegisterCallback(modPanel, "OutputSaveDebugInfoSaving", function(value)
+                applySetting("bDoesOblivionOutputSaveGameFileDebugInfoOnSaving", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Does Oblivion Output Save Game Debug Info On Loading", "OutputSaveDebugInfoLoading", false)
+            RegisterCallback(modPanel, "OutputSaveDebugInfoLoading", function(value)
+                applySetting("bDoesOblivionOutputSaveGameFileDebugInfoOnLoading", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Is Ensure Pairing Entry Validity Enabled For Oblivion Send Handler", "EnsurePairingValidity", true)
+            RegisterCallback(modPanel, "EnsurePairingValidity", function(value)
+                applySetting("bIsEnsurePairingEntryValidityEnabledForOblivionSendHandler", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Should Camera Track Target", "CameraTrackTarget", true)
+            RegisterCallback(modPanel, "CameraTrackTarget", function(value)
+                applySetting("bShouldCameraTrackTarget", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Is Fast Transition Enabled", "FastTransitionEnabled", false)
+            RegisterCallback(modPanel, "FastTransitionEnabled", function(value)
+                applySetting("bIsFastTransitionEnabled", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Enable Fast Transition Injected Worlds", "FastTransitionInjected", false)
+            RegisterCallback(modPanel, "EnableFastTransitionInjectedWorlds", function(value)
+                applySetting("bEnableFastTransitionInjectedWorlds", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Enable Fast Transition Parent Non-World Partition", "FastTransitionParent", false)
+            RegisterCallback(modPanel, "EnableFastTransitionParent", function(value)
+                applySetting("bEnableFastTransitionParentNonWorldPartition", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Enable Fast Transition Pre-Load Houses", "FastTransitionHouses", false)
+            RegisterCallback(modPanel, "EnableFastTransitionHouses", function(value)
+                applySetting("bEnableFastTransitionPreLoadHouses", value)
+            end)
+            AddRowNumber(modPanel, "Max Fast Transition Unload Cache Size", "MaxFastTransitionCache", 3, nil, nil, nil, nil, 0)
+            RegisterCallback(modPanel, "MaxFastTransitionCache", function(value)
+                applySetting("MaxFastTransitionUnloadCacheSize", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Are Dead Default Poses Enabled", "DeadDefaultPosesEnabled", true)
+            RegisterCallback(modPanel, "DeadDefaultPosesEnabled", function(value)
+                applySetting("bAreDeadDefaultPosesEnabled", value)
+            end)
+            AddRowBoolSwitch(modPanel, "Should Save Datatable Dead Default Pose", "SaveDatatableDeadPose", false)
+            RegisterCallback(modPanel, "SaveDatatableDeadPose", function(value)
+                applySetting("bShouldSaveDatatableDeadDefaultPose", value)
+            end)
+            AddRowStringList(modPanel, "Statue Animation Special Idle", "StatueAnimIdle", 250)
+            RegisterCallback(modPanel, "StatueAnimIdle", function(value)
+                applySetting("StatueAnimationSpecialIdle", value)
             end)
 
             --------------------------------------------------------------------------------
@@ -754,16 +1026,6 @@ else
                 applySetting("RestorationExpCastMult", value)
             end)
 
-            AddRowNumber(modPanel, "Exp Gain Disposition Increased", "PersuasionExpIncreased", 3.60)
-            RegisterCallback(modPanel, "PersuasionExpIncreased", function(value)
-                applySetting("PersuasionExpGainDispositionIncreased", value)
-            end)
-
-            AddRowNumber(modPanel, "Exp Gain Disposition Decreased", "PersuasionExpDecreased", 1.20)
-            RegisterCallback(modPanel, "PersuasionExpDecreased", function(value)
-                applySetting("PersuasionExpGainDispositionDecreased", value)
-            end)
-
             --------------------------------------------------------------------------------
             -- Leveling & Character Stats
             --------------------------------------------------------------------------------
@@ -823,7 +1085,13 @@ else
             AddRowSectionHeader(modPanel, "Skills")
             AddRowSeparator(modPanel)
 
+            --------------------------------------------------------------------------------
+            -- Acrobatics
+            --------------------------------------------------------------------------------
+            AddRowSeparator(modPanel)
             AddRowSectionHeader(modPanel, "Acrobatics")
+            AddRowSeparator(modPanel)
+
             AddRowNumber(modPanel, "Novice Jump Fatigue Mult", "NoviceAcrobaticsJumpFatigueMult", 1.00)
             RegisterCallback(modPanel, "NoviceAcrobaticsJumpFatigueMult", function(value)
                 applySetting("NoviceAcrobaticsJumpFatigueMult", value)
@@ -859,8 +1127,12 @@ else
                 applySetting("DodgeCooldown", value)
             end)
 
+            --------------------------------------------------------------------------------
+            -- Alchemy
+            --------------------------------------------------------------------------------
             AddRowSeparator(modPanel)
             AddRowSectionHeader(modPanel, "Alchemy")
+            AddRowSeparator(modPanel)
             AddRowNumber(modPanel, "Apprentice Double Craft Chance", "AlchemyApprenticeCraftChance", 0.25)
             RegisterCallback(modPanel, "AlchemyApprenticeCraftChance", function(value)
                 applySetting("AlchemyApprenticeDoubleCraftChance", value)
@@ -881,8 +1153,12 @@ else
                 applySetting("AlchemyMasterDoubleCraftChance", value)
             end)
 
+            --------------------------------------------------------------------------------
+            -- Athletics
+            --------------------------------------------------------------------------------
             AddRowSeparator(modPanel)
             AddRowSectionHeader(modPanel, "Athletics")
+            AddRowSeparator(modPanel)
             AddRowNumber(modPanel, "Novice Run Fatigue Regen Mult", "AthleticsNoviceRunFatigueRegenMult", 0.75)
             RegisterCallback(modPanel, "AthleticsNoviceRunFatigueRegenMult", function(value)
                 applySetting("PerkAthleticsNoviceRunFatigueRegenMult", value)
@@ -933,8 +1209,12 @@ else
                 applySetting("PerkAthleticsMasterSprintFatigueCostMult", value)
             end)
 
+            --------------------------------------------------------------------------------
+            -- Block
+            --------------------------------------------------------------------------------
             AddRowSeparator(modPanel)
             AddRowSectionHeader(modPanel, "Block")
+            AddRowSeparator(modPanel)
             AddRowNumber(modPanel, "Novice Fatigue Damage Mod", "NoviceBlockFatigueDamageMod", 2.00)
             RegisterCallback(modPanel, "NoviceBlockFatigueDamageMod", function(value)
                 applySetting("NoviceBlockPerkFatigueDamageMod", value)
@@ -1010,8 +1290,12 @@ else
                 applySetting("BlockFormulaFinalSkillMultiplier", value)
             end)
 
+            --------------------------------------------------------------------------------
+            -- Blade
+            --------------------------------------------------------------------------------
             AddRowSeparator(modPanel)
             AddRowSectionHeader(modPanel, "Blade")
+            AddRowSeparator(modPanel)
             AddRowNumber(modPanel, "Novice Power Attack Damage Mult", "NoviceBladePowerAttackDamageMultiplier", 2.50)
             RegisterCallback(modPanel, "NoviceBladePowerAttackDamageMultiplier", function(value)
                 applySetting("NoviceBladePowerAttackDamageMultiplier", value)
@@ -1082,8 +1366,12 @@ else
                 applySetting("BladePerkExpertLightAttackDamageHealthDuration", value)
             end)
 
+            --------------------------------------------------------------------------------
+            -- Blunt
+            --------------------------------------------------------------------------------
             AddRowSeparator(modPanel)
             AddRowSectionHeader(modPanel, "Blunt")
+            AddRowSeparator(modPanel)
             AddRowNumber(modPanel, "Novice Power Attack Damage Mult", "NoviceBluntPowerAttackDamageMultiplier", 2.50)
             RegisterCallback(modPanel, "NoviceBluntPowerAttackDamageMultiplier", function(value)
                 applySetting("NoviceBluntPowerAttackDamageMultiplier", value)
@@ -1149,8 +1437,12 @@ else
                 applySetting("BluntPerkLightAttackSilenceDuration", value)
             end)
 
+            --------------------------------------------------------------------------------
+            -- Hand-to-Hand
+            --------------------------------------------------------------------------------
             AddRowSeparator(modPanel)
             AddRowSectionHeader(modPanel, "Hand-to-Hand")
+            AddRowSeparator(modPanel)
             AddRowNumber(modPanel, "Novice Power Attack Damage Mult", "NoviceHandToHandPowerAttackDamageMultiplier", 2.50)
             RegisterCallback(modPanel, "NoviceHandToHandPowerAttackDamageMultiplier", function(value)
                 applySetting("NoviceHandToHandPowerAttackDamageMultiplier", value)
@@ -1163,7 +1455,7 @@ else
 
             AddRowNumber(modPanel, "Journeyman Power Attack Damage Mult", "JourneymanHandToHandPowerAttackDamageMultiplier", 3.00)
             RegisterCallback(modPanel, "JourneymanHandToHandPowerAttackDamageMultiplier", function(value)
-                applySetting("JourneymanHandToHandPowerAttackDamageMultiplier", value)
+                applySetting("JournyemanHandToHandPowerAttackDamageMultiplier", value)
             end)
 
             AddRowNumber(modPanel, "Expert Power Attack Damage Mult", "ExpertHandToHandPowerAttackDamageMultiplier", 3.00)
@@ -1206,8 +1498,12 @@ else
                 applySetting("HandToHandJourneymanPowerAttackDisarmChance", value)
             end)
 
+            --------------------------------------------------------------------------------
+            -- Marksman
+            --------------------------------------------------------------------------------
             AddRowSeparator(modPanel)
             AddRowSectionHeader(modPanel, "Marksman")
+            AddRowSeparator(modPanel)
             AddRowNumber(modPanel, "Expert Paralyze Chance", "PerkMarksmanExpertParalyzeChance", 10.00)
             RegisterCallback(modPanel, "PerkMarksmanExpertParalyzeChance", function(value)
                 applySetting("PerkMarksmanExpertParalyzeChance", value)
@@ -1253,8 +1549,12 @@ else
                 applySetting("MasterMarksmanBowDrawFatigueBurnPerSecond", value)
             end)
 
+            --------------------------------------------------------------------------------
+            -- Mercantile
+            --------------------------------------------------------------------------------
             AddRowSeparator(modPanel)
             AddRowSectionHeader(modPanel, "Mercantile")
+            AddRowSeparator(modPanel)
             AddRowNumber(modPanel, "Apprentice Level Offset", "MercantileApprenticeOffset", 2, nil, nil, nil, nil, 0)
             RegisterCallback(modPanel, "MercantileApprenticeOffset", function(value)
                 applySetting("PerkMercantileApprenticeLevelOffset", value)
@@ -1270,8 +1570,12 @@ else
                 applySetting("PerkMercantileMasterLevelOffset", value)
             end)
 
+            --------------------------------------------------------------------------------
+            -- Magic Schools
+            --------------------------------------------------------------------------------
             AddRowSeparator(modPanel)
             AddRowSectionHeader(modPanel, "Magic Schools")
+            AddRowSeparator(modPanel)
             AddRowNumber(modPanel, "Alteration Exp Cast Multiplier", "AlterationExpMult", 0.10)
             RegisterCallback(modPanel, "AlterationExpMult", function(value)
                 applySetting("AlterationExpCastMult", value)
@@ -1302,8 +1606,12 @@ else
                 applySetting("RestorationExpCastMult", value)
             end)
 
+            --------------------------------------------------------------------------------
+            -- Persuasion
+            --------------------------------------------------------------------------------
             AddRowSeparator(modPanel)
             AddRowSectionHeader(modPanel, "Persuasion")
+            AddRowSeparator(modPanel)
             AddRowNumber(modPanel, "Exp Gain Disposition Increased", "PersuasionExpIncreased", 3.60)
             RegisterCallback(modPanel, "PersuasionExpIncreased", function(value)
                 applySetting("PersuasionExpGainDispositionIncreased", value)
@@ -1314,8 +1622,12 @@ else
                 applySetting("PersuasionExpGainDispositionDecreased", value)
             end)
 
+            --------------------------------------------------------------------------------
+            -- Sneak
+            --------------------------------------------------------------------------------
             AddRowSeparator(modPanel)
             AddRowSectionHeader(modPanel, "Sneak")
+            AddRowSeparator(modPanel)
             AddRowNumber(modPanel, "Perk Expert Light Impact Modifier", "SneakPerkExpertLightImpactModifier", 0.80)
             RegisterCallback(modPanel, "SneakPerkExpertLightImpactModifier", function(value)
                 applySetting("SneakPerkExpertLightImpactModifier", value)
@@ -1493,43 +1805,37 @@ else
                 applySetting("ImprovedArmorEfficiencyMultiplier", value)
             end)
 
-            AddRowNumber(modPanel, "Base Weapon Damage Multiplier", "BaseWeaponDamageMultiplier", 0.50)
-            RegisterCallback(modPanel, "BaseWeaponDamageMultiplier", function(value)
+            -- Add missing Equipment Settings
+            AddRowNumber(modPanel, "Base Weapon Damage Multiplier", "BaseWeaponDamageMult", 0.50)
+            RegisterCallback(modPanel, "BaseWeaponDamageMult", function(value)
                 applySetting("BaseWeaponDamageMultiplier", value)
             end)
-
-            AddRowNumber(modPanel, "Attribute Damage Multiplier", "AttributeDamageMultiplier", 0.00)
-            RegisterCallback(modPanel, "AttributeDamageMultiplier", function(value)
+            AddRowNumber(modPanel, "Attribute Damage Multiplier", "AttributeDamageMult", 0.00)
+            RegisterCallback(modPanel, "AttributeDamageMult", function(value)
                 applySetting("AttributeDamageMultiplier", value)
             end)
-
-            AddRowNumber(modPanel, "Minimum Attribute Damage", "MinimumAttributeDamage", 0.75)
-            RegisterCallback(modPanel, "MinimumAttributeDamage", function(value)
+            AddRowNumber(modPanel, "Minimum Attribute Damage", "MinAttributeDamage", 0.75)
+            RegisterCallback(modPanel, "MinAttributeDamage", function(value)
                 applySetting("MinimumAttributeDamage", value)
             end)
-
-            AddRowNumber(modPanel, "Skill Damage Multiplier", "SkillDamageMultiplier", 0.01)
-            RegisterCallback(modPanel, "SkillDamageMultiplier", function(value)
+            AddRowNumber(modPanel, "Skill Damage Multiplier", "SkillDamageMult", 0.01)
+            RegisterCallback(modPanel, "SkillDamageMult", function(value)
                 applySetting("SkillDamageMultiplier", value)
             end)
-
-            AddRowNumber(modPanel, "Minimum Skill Damage", "MinimumSkillDamage", 0.20)
-            RegisterCallback(modPanel, "MinimumSkillDamage", function(value)
+            AddRowNumber(modPanel, "Minimum Skill Damage", "MinSkillDamage", 0.20)
+            RegisterCallback(modPanel, "MinSkillDamage", function(value)
                 applySetting("MinimumSkillDamage", value)
             end)
-
-            AddRowNumber(modPanel, "Minimum Hand to Hand Block Value", "MinimumHandToHandBlockValue", 0.20)
-            RegisterCallback(modPanel, "MinimumHandToHandBlockValue", function(value)
+            AddRowNumber(modPanel, "Minimum Hand to Hand Block Value", "MinHandToHandBlock", 0.20)
+            RegisterCallback(modPanel, "MinHandToHandBlock", function(value)
                 applySetting("MinimumHandToHandBlockValue", value)
             end)
-
-            AddRowNumber(modPanel, "Minimum Weapon Block Value", "MinimumWeaponBlockValue", 0.40)
-            RegisterCallback(modPanel, "MinimumWeaponBlockValue", function(value)
+            AddRowNumber(modPanel, "Minimum Weapon Block Value", "MinWeaponBlock", 0.40)
+            RegisterCallback(modPanel, "MinWeaponBlock", function(value)
                 applySetting("MinimumWeaponBlockValue", value)
             end)
-
-            AddRowNumber(modPanel, "Minimum Shield Block Value", "MinimumShieldBlockValue", 0.60)
-            RegisterCallback(modPanel, "MinimumShieldBlockValue", function(value)
+            AddRowNumber(modPanel, "Minimum Shield Block Value", "MinShieldBlock", 0.60)
+            RegisterCallback(modPanel, "MinShieldBlock", function(value)
                 applySetting("MinimumShieldBlockValue", value)
             end)
 
