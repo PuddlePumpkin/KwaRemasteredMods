@@ -555,9 +555,7 @@ else
 
             -- Loop through sections and settings to create rows
             for sectionName, sectionData in pairs(settingsData) do
-                AddRowSeparator(modPanel)
-                AddRowSectionHeader(modPanel, sectionName,"Label")
-                AddRowSeparator(modPanel)
+                AddRowSectionHeader(modPanel, sectionName, 5)
 
                 -- Loop through settings to create rows
                 if sectionData.settings then

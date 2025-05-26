@@ -15,37 +15,42 @@ local RequestedHooks = {}
 -- HeaderTypes
 -- -------------------------------------------------------
 ---@param styleType number|string Number (0-5) or string ("SectionHeader", "FlairTop", "FlairBottom", "FlairTopAndBottom", "LineBottom", "Label")
----@return string
+---@return number
 local function GetHeaderType(styleType)
     if type(styleType) == "number" then
-        local styleTypes = {
-            [0] = "SectionHeader",
-            [1] = "FlairTop",
-            [2] = "FlairBottom",
-            [3] = "FlairTopAndBottom",
-            [4] = "LineBottom",
-            [5] = "Label"
+        return styleType -- Return number directly
+    elseif type(styleType) == "string" then
+        local styleMap = {
+            ["SectionHeader"] = 0,
+            ["FlairTop"] = 1,
+            ["FlairBottom"] = 2,
+            ["FlairTopAndBottom"] = 3,
+            ["LineBottom"] = 4,
+            ["LineTopAndBottom"] = 5,
+            ["Label"] = 6
         }
-        return styleTypes[styleType] or "Label"
+        return styleMap[styleType] or 0 -- Map string to number, default to 0
     end
-    return styleType or "Label"
+    return 0 -- Default to 0 for other types
 end
 
 -- -------------------------------------------------------
 -- FontTypes
 -- -------------------------------------------------------
 ---@param fontType number|string Number (0-5) or string ("Kingthings", "Robinson", "Scrivano")
----@return string
+---@return number
 local function GetFontType(fontType)
     if type(fontType) == "number" then
-        local fontTypes = {
-            [0] = "Kingthings",
-            [1] = "Robinson",
-            [2] = "Scrivano",
+        return fontType -- Return number directly
+    elseif type(fontType) == "string" then
+        local fontMap = {
+            ["Kingthings"] = 0,
+            ["Robinson"] = 1,
+            ["Scrivano"] = 2,
         }
-        return fontTypes[fontType] or "Label"
+        return fontMap[fontType] or 0 -- Map string to number, default to 0
     end
-    return fontType or "Label"
+    return 0 -- Default to 0 for other types
 end
 
 -- -------------------------------------------------------
@@ -64,9 +69,9 @@ function AddRowSectionHeader(modPanel, labelText, style, font, fontsize)
         return
     end
     
-    local resolvedStyle = GetHeaderType(style or 5)  -- Default to "Label"
+    local resolvedStyle = GetHeaderType(style or 0)  -- Default to "SectionHeader"
     local resolvedFont = GetFontType(font or 0)  -- Default to "Kingthings"
-    
+
     local ReturnValue = {}
     modPanel:AddRowSectionHeader(FText(labelText), resolvedStyle, resolvedFont, fontsize or 25, ReturnValue)
 end
