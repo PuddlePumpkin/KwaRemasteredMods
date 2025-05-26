@@ -230,14 +230,6 @@ else
                     { type = "bool", settingProperty = "bDoesOblivionShowPlayerDetectionLighting", defaultValue = false },
                     { type = "bool", settingProperty = "bDoesOblivionOutputSaveGameFileDebugInfoOnSaving", defaultValue = false },
                     { type = "bool", settingProperty = "bDoesOblivionOutputSaveGameFileDebugInfoOnLoading", defaultValue = false },
-                    { type = "bool", settingProperty = "bIsEnsurePairingEntryValidityEnabledForOblivionSendHandler", defaultValue = true },
-                    { type = "bool", settingProperty = "bShouldCameraTrackTarget", defaultValue = true },
-                    { type = "bool", settingProperty = "bIsFastTransitionEnabled", defaultValue = false },
-                    { type = "bool", settingProperty = "bEnableFastTransitionInjectedWorlds", defaultValue = false },
-                    { type = "bool", settingProperty = "bEnableFastTransitionParentNonWorldPartition", defaultValue = false },
-                    { type = "bool", settingProperty = "bEnableFastTransitionPreLoadHouses", defaultValue = false },
-                    { type = "bool", settingProperty = "bAreDeadDefaultPosesEnabled", defaultValue = true },
-                    { type = "bool", settingProperty = "bShouldSaveDatatableDeadDefaultPose", defaultValue = false },
                     { type = "float", settingProperty = "IdleMinDuration", defaultValue = 0.10 },
                     { type = "float", settingProperty = "DrawWeaponDuration", defaultValue = 0.20 },
                     { type = "float", settingProperty = "PreparePowerAttackDuration", defaultValue = 0.37 },
@@ -279,8 +271,6 @@ else
                     { type = "float", settingProperty = "SpeedWhenStartTargetingInDialogue", defaultValue = 2.00 },
                     { type = "float", settingProperty = "PersuasionPercentageReductionFOV", defaultValue = 0.25 },
                     { type = "float", settingProperty = "InputTagBufferingDefaultTime", defaultValue = 0.30 },
-                    { type = "int", settingProperty = "MaxFastTransitionUnloadCacheSize", defaultValue = 3 },
-                    { type = "float", settingProperty = "AimSlowdownRaycastCheckDelay", defaultValue = 0.04 },
                     { type = "float", settingProperty = "KillZOffset", defaultValue = 2500.00 },
                     { type = "float", settingProperty = "CameraShakeCheckDelay", defaultValue = 0.10 },
                 },
@@ -301,6 +291,8 @@ else
                     { type = "float", settingProperty = "IllusionExpCastMult", defaultValue = 0.10 },
                     { type = "float", settingProperty = "MysticismExpCastMult", defaultValue = 0.10 },
                     { type = "float", settingProperty = "RestorationExpCastMult", defaultValue = 0.10 },
+                    { type = "float", settingProperty = "PersuasionExpGainDispositionIncreased", defaultValue = 3.60 },
+                    { type = "float", settingProperty = "PersuasionExpGainDispositionDecreased", defaultValue = 1.20 },
                 },
             },
             ["Leveling & Character Stats"] = {
@@ -438,22 +430,6 @@ else
                     { type = "int", settingProperty = "PerkMercantileMasterLevelOffset", defaultValue = 6 },
                 },
             },
-            ["Magic Schools"] = {
-                settings = {
-                    { type = "float", settingProperty = "AlterationExpCastMult", defaultValue = 0.10 },
-                    { type = "float", settingProperty = "ConjurationExpCastMult", defaultValue = 0.10 },
-                    { type = "float", settingProperty = "DestructionExpCastMult", defaultValue = 0.10 },
-                    { type = "float", settingProperty = "IllusionExpCastMult", defaultValue = 0.10 },
-                    { type = "float", settingProperty = "MysticismExpCastMult", defaultValue = 0.10 },
-                    { type = "float", settingProperty = "RestorationExpCastMult", defaultValue = 0.10 },
-                },
-            },
-            ["Persuasion"] = {
-                settings = {
-                    { type = "float", settingProperty = "PersuasionExpGainDispositionIncreased", defaultValue = 3.60 },
-                    { type = "float", settingProperty = "PersuasionExpGainDispositionDecreased", defaultValue = 1.20 },
-                },
-            },
             ["Sneak"] = {
                 settings = {
                     { type = "float", settingProperty = "PerkSneakExpertLightImpactModifier", defaultValue = 0.80 },
@@ -535,8 +511,6 @@ else
                     { type = "bool", settingProperty = "bAreDeadDefaultPosesEnabled", defaultValue = true },
                     { type = "bool", settingProperty = "bShouldSaveDatatableDeadDefaultPose", defaultValue = false },
                     { type = "float", settingProperty = "AimSlowdownRaycastCheckDelay", defaultValue = 0.04 },
-                    { type = "float", settingProperty = "KillZOffset", defaultValue = 2500.00 },
-                    { type = "float", settingProperty = "CameraShakeCheckDelay", defaultValue = 0.10 },
                 },
             },
             ["Threat System"] = {
