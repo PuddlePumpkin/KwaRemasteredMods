@@ -5,7 +5,7 @@ require("KwaHelpers.ConfigPanelHelpers")
 local SettingsClass = StaticFindObject("/Script/UE5AltarPairing.VOblivionInitialSettings")
 
 if not SettingsClass then
-    print("[OblivionSettings] Failed to find the UVOblivionInitialSettings class. Configuration panel will not control settings.")
+    print("[InitialSettingsPanel] Failed to find the UVOblivionInitialSettings class. Configuration panel will not control settings.")
     -- We can still proceed with panel registration even if the class isn't found,
     -- but the settings won't be controllable via the panel.
 else
@@ -13,10 +13,10 @@ else
     local SettingsCDO = SettingsClass:GetCDO()
 
     if not SettingsCDO or not SettingsCDO:IsValid() then
-        print("[OblivionSettings] Failed to get a valid Settings CDO. Configuration panel will not control settings.")
+        print("[InitialSettingsPanel] Failed to get a valid Settings CDO. Configuration panel will not control settings.")
         -- Continue to register panel, but without settings control.
     else
-        print("[OblivionSettings] Successfully found Settings class and CDO.")
+        print("[InitialSettingsPanel] Successfully found Settings class and CDO.")
 
         local function decamelCase(str)
             if not str or type(str) ~= 'string' then
@@ -52,16 +52,16 @@ else
             local settingsInstance = SettingsCDO.GetOblivionInitialSettings()
             if settingsInstance and settingsInstance:IsValid() then
                 -- Optional: Print confirmation
-                print(string.format("[OblivionSettings] Applying %s = %s", propertyName, tostring(value)))
+                print(string.format("[InitialSettingsPanel] Applying %s = %s", propertyName, tostring(value)))
                 settingsInstance[propertyName] = value
             else
-                print("[OblivionSettings] Failed to get a valid settings instance in applySetting for " .. propertyName .. ".\n")
+                print("[InitialSettingsPanel] Failed to get a valid settings instance in applySetting for " .. propertyName .. ".\n")
             end
         end
 
         -- Define settings data in tables grouped by section and type
         local settingsData = {
-            ["Oblivion Settings"] = {
+            ["Misc"] = {
                 settings = {
                     { type = "bool", settingProperty = "bIsGodMode", defaultValue = false },
                     { type = "bool", settingProperty = "bIsUsingPrePlacedDatatable", defaultValue = true },
