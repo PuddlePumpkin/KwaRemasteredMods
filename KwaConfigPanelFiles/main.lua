@@ -12,9 +12,9 @@ RegisterMod("LuaExampleMod", true, false, function(modPanel)
     -- Separator | height, showLine
     AddRowSeparator(modPanel)
 
-    -- Slider | label, uniqueIdentifier, minValue, maxValue, defaultValue, numberSuffix, decimalCount, bDoSnapSlider, snapSize
+    -- Slider | label, uniqueIdentifier, defaultValue, minValue, maxValue, numberSuffix, decimalCount, bDoSnapSlider, snapSize
     -- Float parameter, callback returns the float value
-    AddRowSlider(modPanel, "Slider", "SliderExampleID", 0, 100, 1)
+    AddRowSlider(modPanel, "Slider", "SliderExampleID", 1, 0, 100)
 
     -- Bool switch | label, uniqueIdentifier, defaultValue
     -- Bool parameter, callback returns the bool value
