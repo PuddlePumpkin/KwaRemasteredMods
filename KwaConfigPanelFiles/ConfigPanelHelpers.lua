@@ -97,9 +97,9 @@ end
 ---@param modPanel table The mod configuration panel
 ---@param label string Label text for the slider
 ---@param uniqueIdentifier string Unique identifier for saving the value
+---@param defaultValue? number Default value (default: minValue)
 ---@param minValue? number Minimum value (default: 0)
 ---@param maxValue? number Maximum value (default: 1)
----@param defaultValue? number Default value (default: minValue)
 ---@param numberSuffix? string Suffix to display after the number (default: "")
 ---@param decimalCount? number Number of decimal places (default: 0)
 ---@param bDoSnapSlider? boolean Whether to snap to increments (default: false)
@@ -489,8 +489,9 @@ end
 ---@param doHandleSaves? boolean Whether to handle saves (default: true)
 ---@param onlyHandleSaves? boolean Whether to only handle saves, no config panel (default: false)
 ---@param onPanelRegistered? fun(panel: table) Optional callback to execute when the panel is successfully registered
+---@param TabPriority? integer The higher the priority the closer to being the first tab it is (default: 0)
 ---@return table|nil panel The configuration panel, or nil if not ready yet (the panel is returned asynchronously via the callback)
-function RegisterMod(modName, doHandleSaves, onlyHandleSaves, onPanelRegistered)
+function RegisterMod(modName, doHandleSaves, onlyHandleSaves, onPanelRegistered, TabPriority)
     if not modName then
         error("modName is required")
         return nil
@@ -521,7 +522,7 @@ function RegisterMod(modName, doHandleSaves, onlyHandleSaves, onPanelRegistered)
 
         -- Create return value table and register mod
         local ReturnValue = {}
-        MainPanel:RegisterMod(modName, doHandleSaves, onlyHandleSaves, ReturnValue)
+        MainPanel:RegisterMod(modName, doHandleSaves, onlyHandleSaves, TabPriority or 0, ReturnValue)
 
         -- Check if we got the panel
         if not ReturnValue.YourPanel then
